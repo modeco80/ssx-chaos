@@ -3,11 +3,12 @@
 
 // This provides implementation of some GCC C/C++
 // runtime stuff that's needed, *without* dragging in
-// libgcc, since that requires a lot of libc to also be
-// dragged in. The core (and modules) intentionally
-// make the choice not to link to libc, but instead
+// libgcc, since that requires a nonzero part of libc to also be dragged in.
+//
+// We make the choice not to link to libc, but instead
 // we reimplement a slightly cleaner surface in the core,
-// which can take from the game's libc.
+// which can take from libc symbols found in the game, or
+// the game's custom implementations (for e.g: memory allocation)
 
 extern "C" {
     ml_noreturn void __pure_virtual() {
@@ -34,6 +35,7 @@ extern "C" {
         }
     }
 
+#if 0
     // This function call is emitted by GCC in C++ for targets
     // which do not support .init/.fini sections. The PS2's relatively
     // basic ELF loader (EELOAD) doesn't support these, so it uses this.
@@ -43,4 +45,5 @@ extern "C" {
     void __main() {
         __do_global_ctors();
     }
+#endif
 }
