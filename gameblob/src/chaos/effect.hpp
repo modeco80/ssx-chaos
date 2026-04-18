@@ -8,6 +8,7 @@ namespace chaos {
     class Effect {
     public:
         virtual u32 getId() const = 0;
+        virtual const char* getName() const = 0;
 
         /// Enables this effect. Do your setup here.
         virtual void enable() {}

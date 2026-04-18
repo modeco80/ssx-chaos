@@ -13,9 +13,12 @@ extern "C" {
 #define ___assert_stringify(xx) #xx
 #define __assert_stringify(x) ___assert_stringify(x)
 
-    /// Assertion funtimes
-#define mlASSERT(xpr) \
-    if(!(xpr)) { mlAbort("Assertion \"" __assert_stringify(xpr) "\" failed in " __FILE__ ":" __assert_stringify(__LINE__)); }
+#ifdef NDEBUG
+    #define mlAssert(xpr)
+#else
+    #define mlASSERT(xpr) \
+        if(!(xpr)) { mlAbort("Assertion \"" __assert_stringify(xpr) "\" failed in " __FILE__ ":" __assert_stringify(__LINE__)); }
+#endif
 
 
 #ifdef __cplusplus

@@ -54,7 +54,7 @@ namespace chaos {
                 return nil(Effect*);
         }
 
-        // Effect stack routines
+        // Effect stack routines (poor name, but it originally really was going to be a stack.)
 
         u32 getActiveEffectIds(u32* pEffectIds) {
             // we dont have lambdas so be happy with this
@@ -85,7 +85,10 @@ namespace chaos {
 
         bool doesEffectIdExistInStack(u32 id) {
             Effect* pEffect = getEffectById(id);
-            mlASSERT(pEffect != nil(Effect*) && "How do you even manage this what");
+
+            // Well, we can't confirm something we don't have exists
+            if(pEffect != nil(Effect*))
+                return false;
 
             // we dont have lambdas so be happy with this
             class Iter {
@@ -155,8 +158,7 @@ namespace chaos {
             activeEffectStack.forEachItem(&FindEffectInfo::forEachCbImpl, &iterState);
 
             EffectInfo* pInfo = iterState.getInfo();
-
-            mlASSERT(pInfo != nil(EffectInfo*) && "okay, you have some shapeshifting memory or something, because theres NO way this can be true");
+            mlASSERT(pInfo != nil(EffectInfo*));
 
             // Disable the effect
             pInfo->pEffect->disable();
@@ -175,15 +177,15 @@ namespace chaos {
 
             ml_autovar(pAllocatedEffect, activeEffectStack.insert(info));
             if(pAllocatedEffect == nil(EffectInfo*)) {
-
-                // disable the last effect, andc then try again
+                // disable the last effect, and then recurse (try again)
                 ml_autovar(pLastEffect, activeEffectStack.lastAllocatedItem());
-                mlASSERT(pLastEffect && "this makes no sense what the fuck is going on");
                 removeFromEffectStack(pLastEffect->pEffect->getId());
 
                 addToEffectStack(id, tickDuration);
             }
         }
+
+        // tickers
 
         void updateEffectStack() {
             class OnFrame {
@@ -191,9 +193,10 @@ namespace chaos {
                 bool forEachCb(EffectInfo* pEffectInfo) {
                     pEffectInfo->pEffect->onFrame();
 
+                    // Update the tick count, which possibly may result in us
+                    // removing the effect from the effect list.
                     if(pEffectInfo->ticksRemaining-- == 0) {
                         removeFromEffectStack(pEffectInfo->pEffect->getId());
-                        return false;
                     }
 
                     return true;
@@ -250,7 +253,10 @@ namespace chaos {
 
 
     void EffectManager::registerEffect(Effect* effect) {
+        // In release, we just handle this by not actually trying to add the effect id.
         mlASSERT(!doesEffectIdExist(effect->getId()) && "DUPLICATE EFFECT ID FIX BROKEN CODE");
+        if(doesEffectIdExist(effect->getId()))
+            return;
 
         RegisteredEffect registerMe;
         registerMe.id = effect->getId();
@@ -276,6 +282,8 @@ namespace chaos {
     }
 
     void EffectManager::enableEffect(u32 id, u32 tickLength) {
+        if(!doesEffectIdExist(id))
+            return;
         addToEffectStack(id, tickLength);
     }
 
