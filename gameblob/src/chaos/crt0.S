@@ -1,0 +1,24 @@
+/* Very, very, very minimal crt0.
+   this CRT0 is only compatible with code
+   which is compiled with -G0 and thus has no
+   small data usage.
+*/
+#include <regdef.h>
+
+.set noreorder
+.set noat
+
+.text
+
+.global _start
+_start:
+	/* TODO: zerofill the .bss sections */
+
+	/* Now that .bss should hopefully be filled,
+	   jump to the C++ entry point. */
+	jal chaosMain
+	nop
+
+	/* Once the entry point is finished, return back to the game code */
+	jr ra
+	nop

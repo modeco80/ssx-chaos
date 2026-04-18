@@ -1,0 +1,10 @@
+**/attic/
+
+**/bin/
+**/obj/
+.cache/
+
+compile_commands.json
+
+# tools which shouldn't be distributed as a part of the repository
+gameblob/tools/cc
