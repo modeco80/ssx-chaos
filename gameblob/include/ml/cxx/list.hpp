@@ -2,13 +2,14 @@
 #define ML_LIST_HPP
 
 #include <ml/types.h>
-#include <new>
+
 #include <ml/cxx/allocator.hpp>
+#include <new>
 
 namespace ml {
 
 	// A linked list.
-	template <class T, class Alloc=StdAllocator<T>>
+	template <class T, class Alloc = StdAllocator<T>>
 	struct List {
 		struct Node {
 			Node* pNext;
@@ -31,7 +32,7 @@ namespace ml {
 		}
 
 		void pushBack(const T& value) {
-			Node* pNode = new (Alloc::allocateOne()) Node();
+			Node* pNode = new(Alloc::allocateOne()) Node();
 			pNode->item = value;
 			pNode->pNext = nil(Node*);
 
@@ -39,7 +40,6 @@ namespace ml {
 				pHead = pNode;
 				return;
 			}
-
 
 			Node* iter = pHead;
 			while(iter) {
@@ -60,7 +60,7 @@ namespace ml {
 			return count;
 		}
 
-		void forEach(bool(*pcbCallback)(T* item, void* ctx), void* ctx) {
+		void forEach(bool (*pcbCallback)(T* item, void* ctx), void* ctx) {
 			Node* iter = pHead;
 			while(iter) {
 				if(!pcbCallback(&iter->item, ctx))
@@ -89,9 +89,10 @@ namespace ml {
 
 			while(true);
 		}
-	private:
+
+	   private:
 		Node* pHead;
 	};
 
-}
+} // namespace ml
 #endif

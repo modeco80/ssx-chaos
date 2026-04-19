@@ -5,49 +5,47 @@
 
 namespace chaos {
 
-    /// A very basic spin lock. This is used to synchronize access to data
-    /// structures which are shared between the IRC node and the game blob.
-    struct SpinLock {
-        u32 lockFlag;
+	/// A very basic spin lock. This is used to synchronize access to data
+	/// structures which are shared between the IRC node and the game blob.
+	struct SpinLock {
+		u32 lockFlag;
 
-        SpinLock() {
-            // Start unlocked
-            lockFlag = 0;
-        }
+		SpinLock() {
+			// Start unlocked
+			lockFlag = 0;
+		}
 
-        ~SpinLock() {
-            // Drop unlocked
-            lockFlag = 0;
-        }
+		~SpinLock() {
+			// Drop unlocked
+			lockFlag = 0;
+		}
 
-        bool tryLock() {
-            if(*((volatile u32*)&lockFlag) != 0)
-                return false;
+		bool tryLock() {
+			if(*((volatile u32*)&lockFlag) != 0)
+				return false;
 
-            *((volatile u32*)&lockFlag) = 1;
-            return true;
-        }
+			*((volatile u32*)&lockFlag) = 1;
+			return true;
+		}
 
-        bool tryUnlock() {
-            if(*((volatile u32*)&lockFlag) != 1)
-                return false;
+		bool tryUnlock() {
+			if(*((volatile u32*)&lockFlag) != 1)
+				return false;
 
-            *((volatile u32*)&lockFlag) = 0;
-            return true;
-        }
+			*((volatile u32*)&lockFlag) = 0;
+			return true;
+		}
 
-        void lock() {
-            // Should prolly sleep lol
-            while(!tryLock())
-                ;
-        }
+		void lock() {
+			// Should prolly sleep lol
+			while(!tryLock());
+		}
 
-        void unlock() {
-            // ditto
-            while(!tryUnlock())
-                ;
-        }
-    };
+		void unlock() {
+			// ditto
+			while(!tryUnlock());
+		}
+	};
 
-}
+} // namespace chaos
 #endif

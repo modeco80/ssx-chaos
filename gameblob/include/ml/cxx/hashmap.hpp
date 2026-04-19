@@ -8,39 +8,33 @@
 
 namespace ml {
 
-    /// A basic hash map data structure.
-    template<class K, class V, template<class T> class Alloc = StdAllocator>
-    class HashMap {
-        struct Node {
-           K key;
-           V value;
-           Node* pNext; // Might be nil(Node*)
-        };
+	/// A basic hash map data structure.
+	template <class K, class V, template <class T> class Alloc = StdAllocator>
+	class HashMap {
+		struct Node {
+			K key;
+			V value;
+			Node* pNext; // Might be nil(Node*)
+		};
 
-        Node** pNodes;
+		Node** pNodes;
 
-    public:
-        typedef Hash<K> Hasher;
+	   public:
+		typedef Hash<K> Hasher;
 
-    private:
-        Node* findNodeForKey(const K& key) {
+	   private:
+		Node* findNodeForKey(const K& key) {
+		}
 
-        }
+	   public:
+		/// Returns true if the key exists
+		bool has(const K& key) {
+		}
 
-    public:
+		V& operator[](const K& key) {
+		}
+	};
 
-        /// Returns true if the key exists
-        bool has(const K& key) {
-
-        }
-
-
-
-        V& operator[](const K& key) {
-
-        }
-    };
-
-}
+} // namespace ml
 
 #endif

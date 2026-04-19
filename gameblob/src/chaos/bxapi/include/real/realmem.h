@@ -7,15 +7,15 @@
 extern "C" {
 #endif
 
-    enum {
-        // default allocation
-        MB_LOW = 0
-    };
+enum {
+	// default allocation
+	MB_LOW = 0
+};
 
-    void* MEM_alloc(const char* name, u32 size, i32 flags);
-    void MEM_free(void* pv);
+void* MEM_alloc(const char* name, u32 size, i32 flags);
+void MEM_free(void* pv);
 
-    void MEM_fill(void* dst, u32 c, u32 len);
+void MEM_fill(void* dst, u32 c, u32 len);
 
 #ifdef __cplusplus
 }

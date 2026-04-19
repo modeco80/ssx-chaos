@@ -8,12 +8,12 @@
 
 namespace chaos {
 
-    /// Returns the amount of ticks needed to repressent a amount of seconds
-    u32 secondsToTickCount(float secondTime = 1.0f);
+	/// Returns the amount of ticks needed to repressent a amount of seconds
+	u32 secondsToTickCount(float secondTime = 1.0f);
 
-    /// Returns the amount of seconds
-    float tickCountToSeconds(u32 tickCount);
+	/// Returns the amount of seconds
+	float tickCountToSeconds(u32 tickCount);
 
-}
+} // namespace chaos
 
 #endif

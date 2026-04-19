@@ -1,48 +1,48 @@
 #ifndef EE_UART_H
 #define EE_UART_H
 
-#include <ml/types.h>
 #include <ml/mem.h>
+#include <ml/types.h>
 
 //! This header declares helper utilities for using the EE UART periphial.
 
 /// Return values of eeUartPollGetLine().
 enum {
-    /// The line was read.
-    EEUART_GETLINE_GOT_LINE = 0,
+	/// The line was read.
+	EEUART_GETLINE_GOT_LINE = 0,
 
-    EEUART_GETLINE_INVALID_BUFFER,
+	EEUART_GETLINE_INVALID_BUFFER,
 
-    /// Indicates that eeUartPollGetLine() emptied the FIFO.
-    EEUART_GETLINE_EMPTIED_FIFO,
+	/// Indicates that eeUartPollGetLine() emptied the FIFO.
+	EEUART_GETLINE_EMPTIED_FIFO,
 
-    /// Indicates that the read FIFO was empty when eeUartPollGetLine() was called.
-    EEUART_GETLINE_FIFO_EMPTY,
+	/// Indicates that the read FIFO was empty when eeUartPollGetLine() was called.
+	EEUART_GETLINE_FIFO_EMPTY,
 
-    /// Indicates that the buffer is too small to hold the line.
-    /// It will need to be reallocated.
-    EEUART_GETLINE_BUFFER_TOO_SMALL
+	/// Indicates that the buffer is too small to hold the line.
+	/// It will need to be reallocated.
+	EEUART_GETLINE_BUFFER_TOO_SMALL
 };
 
 /// Line buffer structure.
 typedef struct eeUartLineBuffer {
-    char* pBuffer;
-    u32 bufferLength;
-    u32 bufferWriteIndex;
+	char* pBuffer;
+	u32 bufferLength;
+	u32 bufferWriteIndex;
 #ifdef __cplusplus
-    eeUartLineBuffer() {
-        mlMemSet(this, 0, sizeof(*this));
-    }
+	eeUartLineBuffer() {
+		mlMemSet(this, 0, sizeof(*this));
+	}
 
-    // helper constructor to make initalizing this structure less error prone
-    eeUartLineBuffer(char* pBuffer, u32 bufferLength)
-        : pBuffer(pBuffer), bufferLength(bufferLength) {
-        rewind();
-    }
+	// helper constructor to make initalizing this structure less error prone
+	eeUartLineBuffer(char* pBuffer, u32 bufferLength)
+		: pBuffer(pBuffer), bufferLength(bufferLength) {
+		rewind();
+	}
 
-    void rewind() {
-        bufferWriteIndex = 0;
-    }
+	void rewind() {
+		bufferWriteIndex = 0;
+	}
 #endif
 } eeUartLineBuffer;
 

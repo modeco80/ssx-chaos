@@ -1,15 +1,15 @@
 #ifndef ML_VEC_HPP
 #define ML_VEC_HPP
 
-#include <ml/types.h>
 #include <ml/mem.h>
+#include <ml/types.h>
 
-#include <new>
 #include <ml/cxx/allocator.hpp>
+#include <new>
 
 namespace ml {
 	/// A vector/dynamic array.
-	template < class T, class Alloc = StdAllocator<T> >
+	template <class T, class Alloc = StdAllocator<T> >
 	struct Vec {
 		typedef T* Pointer;
 		typedef T& Reference;
@@ -92,7 +92,7 @@ namespace ml {
 		void popBack() {
 			if(uiSize == 0)
 				return;
-			resize(uiSize-1);
+			resize(uiSize - 1);
 		}
 
 		void clear() {
@@ -115,7 +115,7 @@ namespace ml {
 		}
 
 		Reference back() {
-			return pMemory[uiSize-1];
+			return pMemory[uiSize - 1];
 		}
 
 		SizeType capacity() const {
@@ -126,7 +126,7 @@ namespace ml {
 			return uiSize;
 		}
 
-	private:
+	   private:
 		/// Shared destroy helper for clearing out memory. if the
 		/// bFree template arg is true, then this will deallocate and nil the pointer
 		/// entirely.
@@ -144,6 +144,6 @@ namespace ml {
 		SizeType uiCapacity; // In elements of T
 		SizeType uiSize;	 // Actual size.
 	};
-}
+} // namespace ml
 
 #endif

@@ -5,7 +5,8 @@ TYPE := elf
 EFFECTS := \
 	effects/no_stats.cpp
 
-# Runtime sources
+# Runtime sources (startup code, and code
+# needed to link the ml libs properly)
 RUNTIME := \
 	crt0.S \
 	memory.cpp \
@@ -13,6 +14,7 @@ RUNTIME := \
 
 SOURCES := \
 	$(RUNTIME) \
+	random.cpp \
 	hook/trampoline.cpp \
 	effect_manager.cpp \
 	$(EFFECTS) \

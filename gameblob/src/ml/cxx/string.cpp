@@ -1,6 +1,7 @@
-#include <ml/cxx/string.hpp>
 #include <ml/mem.h>
 #include <ml/string.h>
+
+#include <ml/cxx/string.hpp>
 
 namespace ml {
 
@@ -58,7 +59,7 @@ namespace ml {
 
 	void String::reserve(u32 newCapacity) {
 		if(capacity == 0) {
-			mem = (char*)mlMalloc(newCapacity+1);
+			mem = (char*)mlMalloc(newCapacity + 1);
 			mem[newCapacity] = 0;
 			capacity = newCapacity;
 		}
@@ -93,4 +94,4 @@ namespace ml {
 		return true;
 	}
 
-}
+} // namespace ml

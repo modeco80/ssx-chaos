@@ -12,21 +12,22 @@ namespace ml {
 	HashResult hashBuffer(const u8* pBuffer, usize size);
 
 	/// Typed hashing trait class.
-	template<class T>
+	template <class T>
 	class Hash {};
 
-	/// This.. interesting usage of the C preprocessor automatically generates primitive mlHash<T>
-	/// specializations. It's pretty nasty, but it also works. Which is the best kind :)
-	#define X(T) \
-		template<> class Hash<T> { \
-			public:   \
-				static HashResult hash(const T item) { \
-						return hashBuffer(reinterpret_cast<const u8*>(&item), sizeof(T)); \
-				} \
-		};
+/// This.. interesting usage of the C preprocessor automatically generates primitive mlHash<T>
+/// specializations. It's pretty nasty, but it also works. Which is the best kind :)
+#define X(T)                                                                  \
+	template <>                                                               \
+	class Hash<T> {                                                           \
+	   public:                                                                \
+		static HashResult hash(const T item) {                                \
+			return hashBuffer(reinterpret_cast<const u8*>(&item), sizeof(T)); \
+		}                                                                     \
+	};
 	ML_PRIMITIVE_TYPE_LIST()
-	#undef X
+#undef X
 
-}
+} // namespace ml
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef ML_CXX_STACK_HPP
 #define ML_CXX_STACK_HPP
 
-#include <ml/cxx/vec.hpp>
 #include <ml/cxx/allocator.hpp>
+#include <ml/cxx/vec.hpp>
 
 // TODO: Having this able to use multiple containers instead of just mlVec<> would be nice,
 // but for now it's probably fine.
@@ -17,7 +17,7 @@ namespace ml {
 		Vec<T, Alloc> items;
 		u32 top;
 
-	public:
+	   public:
 		Stack() {
 			top = 0;
 		}
@@ -63,6 +63,6 @@ namespace ml {
 			return top;
 		}
 	};
-	}
+} // namespace ml
 
 #endif

@@ -6,10 +6,12 @@
 namespace ml {
 
 	/// The standard allocator. Used by most cxx containers by default.
-	template<class T>
+	template <class T>
 	struct StdAllocator {
-		template<class U>
-		struct Rebind { typedef StdAllocator<U> Type; };
+		template <class U>
+		struct Rebind {
+			typedef StdAllocator<U> Type;
+		};
 
 		static T* allocateArray(usize count) {
 			return (T*)mlCalloc(count, sizeof(T));
@@ -24,8 +26,7 @@ namespace ml {
 				mlFree(pObj);
 			}
 		}
-
 	};
-}
+} // namespace ml
 
 #endif

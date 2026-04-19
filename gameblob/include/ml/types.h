@@ -18,7 +18,7 @@
 // Use this type across ABI boundaries of C++ code which passes booleans.
 // You may still use stdbool true/false for them.
 #ifndef __cplusplus
-#include <stdbool.h>
+	#include <stdbool.h>
 typedef unsigned char cxxbool;
 #else
 typedef bool cxxbool;
@@ -43,14 +43,14 @@ typedef ptrdiff_t isize;
 
 // Primitive type X-macro list.
 #define ML_PRIMITIVE_TYPE_LIST() \
-    X(u8) \
-    X(i8) \
-    X(u16) \
-    X(i16) \
-    X(u32) \
-    X(i32) \
-    X(u64) \
-    X(i64) \
+	X(u8)                        \
+	X(i8)                        \
+	X(u16)                       \
+	X(i16)                       \
+	X(u32)                       \
+	X(i32)                       \
+	X(u64)                       \
+	X(i64)
 
 // A typed null pointer. I prefer this over the C NULL macro,
 // since it is.. well, typed. It's possible to create a franken-nullptr,

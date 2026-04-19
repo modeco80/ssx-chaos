@@ -1,5 +1,5 @@
-#include <ml/types.h>
 #include <ml/abort.h>
+#include <ml/types.h>
 
 // This provides implementation of some GCC C/C++
 // runtime stuff that's needed, *without* dragging in
@@ -11,29 +11,29 @@
 // the game's custom implementations (for e.g: memory allocation)
 
 extern "C" {
-    ml_noreturn void __pure_virtual() {
-        mlAbort("pure virtual function called");
-    }
+ml_noreturn void __pure_virtual() {
+	mlAbort("pure virtual function called");
+}
 
-    typedef void(*vfunc)();
+typedef void (*vfunc)();
 
-    // Global constructors
-    extern vfunc __CTOR_LIST__[];
+// Global constructors
+extern vfunc __CTOR_LIST__[];
 
-    void __do_global_ctors() {
-        u32 nrPtrs = (u32)__CTOR_LIST__[0];
+void __do_global_ctors() {
+	u32 nrPtrs = (u32)__CTOR_LIST__[0];
 
-        // A -1 value means that the list size has to be calculated
-        // by this function.
-        if(nrPtrs == (u32)0xffffffff) {
-            for(nrPtrs = 0; __CTOR_LIST__[nrPtrs + 1] != 0; nrPtrs++);
-        }
+	// A -1 value means that the list size has to be calculated
+	// by this function.
+	if(nrPtrs == (u32)0xffffffff) {
+		for(nrPtrs = 0; __CTOR_LIST__[nrPtrs + 1] != 0; nrPtrs++);
+	}
 
-        // Call constructors in reverse order.
-        for(u32 i = nrPtrs; i >= 1; i--) {
-            __CTOR_LIST__[i]();
-        }
-    }
+	// Call constructors in reverse order.
+	for(u32 i = nrPtrs; i >= 1; i--) {
+		__CTOR_LIST__[i]();
+	}
+}
 
 #if 0
     // This function call is emitted by GCC in C++ for targets

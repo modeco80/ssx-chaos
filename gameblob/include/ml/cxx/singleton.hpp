@@ -2,16 +2,19 @@
 #define ML_CXX_SINGLEGON_HPP
 
 #include <ml/types.h>
+
 #include <new>
 
 namespace ml {
 
 	/// A singleton which allocates the memory for the object on the heap.
-	template<class T>
+	template <class T>
 	class PtrSingleton {
 		T* instance;
-	public:
-		PtrSingleton() {}
+
+	   public:
+		PtrSingleton() {
+		}
 		~PtrSingleton() {
 			destroy();
 		}
@@ -38,13 +41,14 @@ namespace ml {
 
 	/// A singleton which allocates its data statically, without any heap allocations.
 	/// You should probably only use this spairingly for small classes.
-	template<class T>
+	template <class T>
 	class StaticSingleton {
 		struct {
 			bool init;
 			u8 instanceData[sizeof(T)];
 		} initData;
-	public:
+
+	   public:
 		StaticSingleton() {
 			initData.init = false;
 		}
@@ -56,10 +60,10 @@ namespace ml {
 		T* getPtr() {
 			if(!initData.init) {
 				initData.init = true;
-				return *new (&initData.instanceData[0]) T();
+				return *new(&initData.instanceData[0]) T();
 			}
 
-			return*(T*)&initData.instanceData[0];
+			return *(T*)&initData.instanceData[0];
 		}
 
 		T& get() {
@@ -72,5 +76,5 @@ namespace ml {
 		}
 	};
 
-}
+} // namespace ml
 #endif

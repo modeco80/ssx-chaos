@@ -3,14 +3,14 @@
 
 namespace chaos {
 
-    void voteInit();
-    void voteShutdown();
+	void voteInit();
+	void voteShutdown();
 
-    /// Starts a new vote with random effect choices.
-    void voteCreateRandom();
+	/// Starts a new vote with random effect choices.
+	void voteCreateRandom();
 
-    /// Called at tick rate to update the vote.
-    void voteUpdate();
-}
+	/// Called at tick rate to update the vote.
+	void voteUpdate();
+} // namespace chaos
 
 #endif
