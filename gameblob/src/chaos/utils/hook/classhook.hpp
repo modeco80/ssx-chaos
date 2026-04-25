@@ -16,10 +16,10 @@ class Hook_##className##_##funcName { \
 		\
 	public: \
 		void hook() { \
-			void* pptr; \
+			void* barePointer; \
 			ml_autovar(mptr, &className::funcName); \
-			memcpy(&pptr, ((u8*)&mptr + 4), sizeof(void*));  \
-			handle = trampolineHook(pptr, (void*)&hookImpl, (void**)&original); \
+			memcpy(&barePointer, ((u8*)&mptr + 4), sizeof(void*));  \
+			handle = trampolineHook(barePointer, (void*)&hookImpl, (void**)&original); \
 		} \
 } hook_##className##_##funcName; \
 ret Hook_##className##_##funcName::hookImpl(className* klass)
@@ -31,7 +31,10 @@ class Hook_##className##_##funcName { \
 		static ret hookImpl(className* klass, __VA_ARGS__); \
 	public: \
 		void hook() { \
-			handle = trampolineHook(ml::bitCast<void*>(&className::funcName), (void*)&hookImpl, (void**)&original); \
+			void* barePointer; \
+			ml_autovar(mptr, &className::funcName); \
+			memcpy(&barePointer, ((u8*)&mptr + 4), sizeof(void*));  \
+			handle = trampolineHook(barePointer, (void*)&hookImpl, (void**)&original); \
 		} \
 } hook_##className##_##funcName; \
 ret Hook_##className##_##funcName::hookImpl(className* klass, __VA_ARGS__)
