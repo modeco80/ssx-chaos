@@ -10,7 +10,10 @@
 
 /// Per-hook saved data.
 struct HookData {
+	/// The original target.
 	void* pTarget;
+
+	/// A 4-instruction long trampoline which can call the original function.
 	u32 trampoline[4];
 };
 
@@ -27,7 +30,6 @@ namespace {
 
 		// Allocate stuff
 		hook->pTarget = pTarget;
-		mlMemSet(&hook->trampoline[0], 0xab, 4*sizeof(u32));
 	}
 
 	void freeHook(HookData* hook) {
@@ -37,6 +39,10 @@ namespace {
 } // namespace
 
 HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
+	// Idiot checks which don't need to be done in release.
+	mlASSERT(pTarget != nil(void*));
+	mlASSERT(pHook != nil(void*));
+
 	// Try to allocate a hook structure first. If this fails, then
 	// return a nil handle to indicate that we couldn't hook.
 	HookData* hook = allocHook(pTarget);
@@ -53,23 +59,34 @@ HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
 	*pTrampolineBuf++ = targetInstructions[1];
 
 	// Encode the jump back to the original function body
-	*pTrampolineBuf++ = mipse::j(reinterpret_cast<u32>(reinterpret_cast<u32*>(pTarget) + 2)); // j [pTarget+8] (skip the hook)
+	*pTrampolineBuf++ = mipse::j(reinterpret_cast<u32>(reinterpret_cast<u32*>(pTarget) + 2)); // j [pTarget+8] (to skip the hook)
 	*pTrampolineBuf++ = 0x0;																  // nop
 
 	// In the target, encode the hook to our code
 	*targetInstructions++ = mipse::j(reinterpret_cast<u32>(pHook)); // j [pHook]
 	*targetInstructions++ = 0x0;									// nop
 
-	// If user passes a valid pointer, give them a pointer to the trampoline buffer
+	// If the user passes a valid pointer, give them a pointer to the trampoline buffer
 	// that they can call if they want to call the original function
 	if(ppTrampoline) {
 		*ppTrampoline = reinterpret_cast<void*>(&hook->trampoline[0]);
 	}
 
+	// Flush caches.
+	__asm__ volatile(
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x0\n"
+		"syscall\n" // FlushCache(0)
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x2\n"
+		"syscall\n" // FlushCache(2)
+	);
+
 	return reinterpret_cast<HookHandle>(hook);
 }
 
 void trampolineUnhook(HookHandle hook) {
+	mlASSERT(hook != nil(HookHandle));
 	if(hook != nil(HookHandle)) {
 		HookData* pHook = reinterpret_cast<HookData*>(hook);
 
@@ -77,6 +94,16 @@ void trampolineUnhook(HookHandle hook) {
 		ml_autovar(pTarget, reinterpret_cast<u32*>(pHook->pTarget));
 		pTarget[0] = pHook->trampoline[0];
 		pTarget[1] = pHook->trampoline[1];
+
+		// Flush caches.
+		__asm__ volatile(
+			"li $3, 0x64\n"
+			"ori $4, $0, 0x0\n"
+			"syscall\n" // FlushCache(0)
+			"li $3, 0x64\n"
+			"ori $4, $0, 0x2\n"
+			"syscall\n" // FlushCache(2)
+		);
 
 		// Free the hook.
 		freeHook(pHook);

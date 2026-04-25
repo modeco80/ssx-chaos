@@ -1,8 +1,6 @@
 #include "../ml/hw/eeuart.h"
 #include "chaos_core.hpp"
-#include "vote_blob.hpp"
 
-#include <ml/cxx/bitcast.hpp>
 #include "utils/hook/trampoline.hpp"
 #include "utils/hook/classhook.hpp"
 
@@ -29,7 +27,7 @@ CHAOS_CLASS_HOOK_DECLARE0(void, cGame, Render) {
 	//getChaosCore().render();
 
 	// Because we nopped out cGraphicsMan::Submit in cGame::Render so we can draw more of our own things,
-	// we submit after onPostRender() is called.
+	// we submit after onPostRender() is called, allowing us to draw more things.
 
 	GrMan.Submit();
 }
@@ -46,15 +44,5 @@ void chaosDoGameHooks() {
 	hook_cGame_Update.hook();
 	hook_cGame_Render.hook();
 
-	// Do the dance
-	__asm__ volatile(
-		"li $3, 0x64\n"
-		"ori $4, $0, 0x0\n"
-		"syscall\n" // FlushCache(0)
-		"li $3, 0x64\n"
-		"ori $4, $0, 0x2\n"
-		"syscall\n" // FlushCache(2)
-	);
-
-	eeUartPuts("Game hooks established!");
+	eeUartPuts("Game functions hooked!");
 }
