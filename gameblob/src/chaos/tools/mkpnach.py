@@ -3,15 +3,13 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'tools')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '')))
 
 # modules we depend on
 from utils.mips import Mips
 from utils.pnach import PnachWriter
 from utils.elf import ElfWrapper
 from utils.ldparse import LdScript
-
-
 
 # Yields word chunks from a word-aligned byte array
 def yieldWordChunksFromBytes(byteArray: bytes):

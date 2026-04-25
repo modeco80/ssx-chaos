@@ -43,14 +43,22 @@ USER_CFLAGS = -DIN_CHAOS_BLOB -DCHAOS_REGION_$(REGION) \
 EXTRATARGETS_PRE = $(LINKSCRIPT)
 EXTRATARGETS_POST = $(GAME_$(GAME)_$(REGION)_PNACH)
 
+# Used to make sure that we rebuild the pnach if mkpnach changes
+MKPNACH_DEPS := \
+	tools/mkpnach.py \
+	tools/utils/elf.py \
+	tools/utils/ldparse.py \
+	tools/utils/mips.py \
+	tools/utils/pnach.py
+
 include $(TOP)/mk/makedef.mk
 
 # Preprocess the linker script to include game symbols here.
-$(OBJDIR)/chaos_blob.ld: $(OBJDIR)/ chaos_blob.ld
+$(OBJDIR)/chaos_blob.ld: $(OBJDIR)/ chaos_blob.ld.in
 	$(info Preprocessing linker script $@)
-	sed 's|@REGION@|$(REGION)|' chaos_blob.ld > $@
+	sed 's|@REGION@|$(REGION)|' chaos_blob.ld.in > $@
 
-$(GAME_$(GAME)_$(REGION)_PNACH): bin/$(NAME).elf
+$(GAME_$(GAME)_$(REGION)_PNACH): bin/$(NAME).elf $(MKPNACH_DEPS)
 	$(info Making PNACH $@)
-	./mkpnach.py $@ $(REGION)
+	tools/mkpnach.py $@ $(REGION)
 
