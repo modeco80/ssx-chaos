@@ -1,8 +1,8 @@
 #include "../../ml/hw/eeuart.h"
 #include "../effect.hpp"
-#include "../effect_manager.hpp"
+#include "../chaos_core.hpp"
 
-class NoStatsEffect : public chaos::EffectMixin<0x0> {
+class NoStatsEffect : public ChaosEffectImpl<0x0> {
 	const char* getName() const ml_override {
 		return "Zero Stats";
 	}

@@ -10,7 +10,3 @@ void mlFree(void* pv) {
 	if(pv)
 		MEM_free(pv);
 }
-
-void mlMemSet(void* pvBuffer, i32 c, u32 len) {
-	MEM_fill(pvBuffer, c, len);
-}

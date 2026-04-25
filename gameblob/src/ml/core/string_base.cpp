@@ -2,15 +2,6 @@
 #include <ml/mem.h>
 #include <ml/string.h>
 
-u32 mlStrLen(const char* pszString) {
-	mlASSERT(pszString);
-
-	const char* start = pszString;
-	while(*pszString)
-		pszString++;
-	return (pszString - start);
-}
-
 char* mlStrDup(const char* pszString) {
 	mlASSERT(pszString);
 	if(!pszString)

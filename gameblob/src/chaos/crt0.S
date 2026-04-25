@@ -12,7 +12,8 @@
 
 .global _start
 _start:
-	/* TODO: zerofill the .bss sections */
+	/* TODO: zerofill the .bss sections? EE Kernel seems to
+	 do this for us already, but it might be wise to just do it anyways... */
 
 	/* Now that .bss should hopefully be filled,
 	   jump to the C++ entry point. */

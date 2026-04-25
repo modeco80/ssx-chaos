@@ -9,14 +9,19 @@ EFFECTS := \
 # needed to link the ml libs properly)
 RUNTIME := \
 	crt0.S \
-	memory.cpp \
-	abort.cpp
+	runtime/ml_memory.cpp \
+	runtime/ml_string.cpp \
+	runtime/ml_abort.cpp
+
+UTILS := \
+	utils/random.cpp \
+	utils/hook/trampoline.cpp
 
 SOURCES := \
 	$(RUNTIME) \
-	random.cpp \
-	hook/trampoline.cpp \
-	effect_manager.cpp \
+	$(UTILS) \
+	game_hooks.cpp \
+	chaos_core.cpp \
 	$(EFFECTS) \
 	vote.cpp \
 	main.cpp
