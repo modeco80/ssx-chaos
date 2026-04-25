@@ -1,10 +1,9 @@
 #include "random.hpp"
 
-
 class XorShift32Random {
 	u32 xorshift32_state;
 
-	public:
+   public:
 	u32 getSeed() const {
 		return xorshift32_state;
 	}

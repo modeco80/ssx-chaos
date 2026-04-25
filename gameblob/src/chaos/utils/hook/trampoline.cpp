@@ -74,12 +74,12 @@ HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
 
 	// Flush caches.
 	__asm__ volatile(
-		"li $3, 0x64\n"
-		"ori $4, $0, 0x0\n"
-		"syscall\n" // FlushCache(0)
-		"li $3, 0x64\n"
-		"ori $4, $0, 0x2\n"
-		"syscall\n" // FlushCache(2)
+	"li $3, 0x64\n"
+	"ori $4, $0, 0x0\n"
+	"syscall\n" // FlushCache(0)
+	"li $3, 0x64\n"
+	"ori $4, $0, 0x2\n"
+	"syscall\n" // FlushCache(2)
 	);
 
 	return reinterpret_cast<HookHandle>(hook);
@@ -97,12 +97,12 @@ void trampolineUnhook(HookHandle hook) {
 
 		// Flush caches.
 		__asm__ volatile(
-			"li $3, 0x64\n"
-			"ori $4, $0, 0x0\n"
-			"syscall\n" // FlushCache(0)
-			"li $3, 0x64\n"
-			"ori $4, $0, 0x2\n"
-			"syscall\n" // FlushCache(2)
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x0\n"
+		"syscall\n" // FlushCache(0)
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x2\n"
+		"syscall\n" // FlushCache(2)
 		);
 
 		// Free the hook.

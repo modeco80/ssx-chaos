@@ -46,4 +46,3 @@ struct Vote {
 /// The address of the vote structure in memory. The IRC end will read to this
 /// region of memory
 #define VOTE_ADDRESS 0xb0000
-

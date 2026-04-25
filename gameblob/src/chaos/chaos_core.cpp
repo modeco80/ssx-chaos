@@ -13,7 +13,6 @@
 #include "utils/random.hpp"
 #include "vote_blob.hpp"
 
-
 enum { MAX_EFFECTS_ACTIVE = 8 };
 
 struct RegisteredEffect {
@@ -69,7 +68,7 @@ namespace {
 		class Iter {
 			u32* pEffectIds;
 
-			public:
+		   public:
 			explicit Iter(u32* pEffectIds)
 				: pEffectIds(pEffectIds) {
 			}
@@ -105,7 +104,7 @@ namespace {
 			bool found;
 			ChaosEffect* pLookingEffect;
 
-			public:
+		   public:
 			explicit Iter(ChaosEffect* pLookingEffect)
 				: pLookingEffect(pLookingEffect) {
 			}
@@ -143,7 +142,7 @@ namespace {
 			ActiveEffectInfo* pActiveEffectInfo;
 			u32 id;
 
-			public:
+		   public:
 			explicit FindActiveEffectInfo(u32 id)
 				: id(id) {
 			}
@@ -200,7 +199,7 @@ namespace {
 	// tickers
 
 	class OnFrame {
-		public:
+	   public:
 		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
 			pActiveEffectInfo->pEffect->onFrame();
 
@@ -219,7 +218,7 @@ namespace {
 	};
 
 	class PreRender {
-		public:
+	   public:
 		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
 			pActiveEffectInfo->pEffect->onPreRender();
 			return true;
@@ -231,7 +230,7 @@ namespace {
 	};
 
 	class PostRender {
-		public:
+	   public:
 		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
 			pActiveEffectInfo->pEffect->onPostRender();
 			return true;
@@ -347,4 +346,3 @@ void ChaosCore::render() {
 	// voteRender();
 	// TODO: Render active effect stack
 }
-

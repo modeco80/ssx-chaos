@@ -5,13 +5,10 @@
 #include "chaos_core.hpp"
 #include "vote_blob.hpp"
 
-
 Vote* gpVote;
 
-
 // Progress bar
-//TickBar gVoteTickBar(0, 0, 448, 32);
-
+// TickBar gVoteTickBar(0, 0, 448, 32);
 
 void voteInit() {
 	// Initalize the vote structure at the given address
@@ -71,12 +68,10 @@ void voteUpdate() {
 }
 
 void voteRender() {
-	//gVoteTickBar.render();
+	// gVoteTickBar.render();
 
 #if 0
 	for(u32 i = 0; i < CHAOS_VOTE_COUNT; ++i) {
 	}
 #endif
 }
-
-

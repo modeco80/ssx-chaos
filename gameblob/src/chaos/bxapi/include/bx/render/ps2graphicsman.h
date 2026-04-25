@@ -4,7 +4,7 @@
 #include <ml/types.h>
 
 class cPS2GraphicsMan {
-public:
+   public:
 }
 
 extern cPS2GraphicsMan GrManPS2;

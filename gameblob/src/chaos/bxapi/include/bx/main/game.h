@@ -4,7 +4,7 @@
 #include <ml/types.h>
 
 class cGame {
-public:
+   public:
 	void Update();
 	void Render();
 };

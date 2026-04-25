@@ -4,10 +4,9 @@
 #include <ml/types.h>
 
 class cGraphicsMan {
-public:
+   public:
 	typedef u32 TexHandle;
 	typedef u32 eGMLayer; // TODO this is an enum obviously.
-
 
 	TexHandle AllocShape(u8* pShapeData, const char* pszName, u32 unk = 0);
 

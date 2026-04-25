@@ -4,7 +4,7 @@
 #include <ml/types.h>
 
 class ChaosEffect {
-	public:
+   public:
 	virtual u32 getId() const = 0;
 	virtual const char* getName() const = 0;
 
@@ -35,7 +35,7 @@ class ChaosEffect {
 
 template <u32 id>
 class ChaosEffectImpl : public ChaosEffect {
-	public:
+   public:
 	u32 getId() const ml_override {
 		return id;
 	}

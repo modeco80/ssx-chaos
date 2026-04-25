@@ -11,7 +11,7 @@ class uiProgressBar {
 	// FIXME: we need colours!!!!!!!
 	// tARGB foreColor
 	// tARGB barColor
-public:
+   public:
 	uiProgressBar(u32 x, u32 y, u32 width, u32 height);
 
 	/// Sets the new progress value.

@@ -1,6 +1,6 @@
 #include "../../ml/hw/eeuart.h"
-#include "../effect.hpp"
 #include "../chaos_core.hpp"
+#include "../effect.hpp"
 
 class NoStatsEffect : public ChaosEffectImpl<0x0> {
 	const char* getName() const ml_override {

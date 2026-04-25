@@ -1,6 +1,6 @@
 #include <ml/abort.h>
-#include <ml/string.h>
 #include <ml/mem.h>
+#include <ml/string.h>
 
 // libc symbols
 extern "C" u32 strlen(const char*);
@@ -19,5 +19,3 @@ void mlMemSet(void* pBuffer, int c, u32 len) {
 void mlMemCpy(void* pDestBuffer, const void* pSrcBuffer, u32 copyLen) {
 	memcpy(pDestBuffer, pSrcBuffer, copyLen);
 }
-
-

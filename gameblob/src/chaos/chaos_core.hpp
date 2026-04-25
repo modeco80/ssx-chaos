@@ -6,7 +6,7 @@
 class ChaosEffect; // We only need a fwd-decl for this
 
 class ChaosCore {
-	public:
+   public:
 	/// Registers an effect.
 	void registerEffect(ChaosEffect* effect);
 
@@ -39,18 +39,17 @@ ChaosCore& chaosGetCore();
 // Registers an effect. Usually used inside of an effects/*.cpp file to register one.
 // This is the only public surface that effects use, so they are implemented in bare
 // .cpp files and registered like so so the chaos core can use them. Kind of annoying, but hey!
-#define REGISTER_EFFECT(T)                                      \
-static struct EffectRegister_##T {                          \
-	T* instance;                                            \
-	EffectRegister_##T() {                                  \
-		instance = new T();                                 \
-		chaosGetCore().registerEffect(instance); \
-	}                                                       \
-															\
-	~EffectRegister_##T() {                                 \
-		delete instance;                                    \
-	}                                                       \
-} instance_register__##T;
-
+#define REGISTER_EFFECT(T)                           \
+	static struct EffectRegister_##T {               \
+		T* instance;                                 \
+		EffectRegister_##T() {                       \
+			instance = new T();                      \
+			chaosGetCore().registerEffect(instance); \
+		}                                            \
+                                                     \
+		~EffectRegister_##T() {                      \
+			delete instance;                         \
+		}                                            \
+	} instance_register__##T;
 
 #endif
