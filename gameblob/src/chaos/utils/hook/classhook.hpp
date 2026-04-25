@@ -5,6 +5,9 @@
 
 #include "trampoline.hpp"
 
+// We have to use memcpy() to tell gcc we're type punning...
+extern "C" void* memcpy(void* dst, const void* src, u32 len);
+
 #define CHAOS_CLASS_HOOK_DECLARE0(ret, className, funcName) \
 class Hook_##className##_##funcName { \
 		HookHandle handle;  \
@@ -13,7 +16,10 @@ class Hook_##className##_##funcName { \
 		\
 	public: \
 		void hook() { \
-			handle = trampolineHook(ml::bitCast<void*>(&className::funcName), (void*)&hookImpl, (void**)&original); \
+			void* pptr; \
+			ml_autovar(mptr, &className::funcName); \
+			memcpy(&pptr, ((u8*)&mptr + 4), sizeof(void*));  \
+			handle = trampolineHook(pptr, (void*)&hookImpl, (void**)&original); \
 		} \
 } hook_##className##_##funcName; \
 ret Hook_##className##_##funcName::hookImpl(className* klass)

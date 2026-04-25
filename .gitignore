@@ -4,7 +4,11 @@
 **/obj/
 .cache/
 
+**/__pycache__
+
 compile_commands.json
+
+gameblob/src/chaos/*.pnach
 
 # tools which shouldn't be distributed as a part of the repository
 gameblob/tools/cc

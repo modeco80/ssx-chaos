@@ -2,7 +2,7 @@
 /* Include the api file */
 INCLUDE bxapi/ld/@REGION@.ld
 SECTIONS {
-	BLOB_LOAD_ADDRESS = 0x000ab000;
+	BLOB_LOAD_ADDRESS = 0x000a0000;
 
 	. = BLOB_LOAD_ADDRESS;
 	_begin = BLOB_LOAD_ADDRESS;

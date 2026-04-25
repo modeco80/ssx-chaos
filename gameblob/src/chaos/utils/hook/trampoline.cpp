@@ -11,7 +11,7 @@
 /// Per-hook saved data.
 struct HookData {
 	void* pTarget;
-	u32* pTrampoline;
+	u32 trampoline[4];
 };
 
 namespace {
@@ -27,13 +27,10 @@ namespace {
 
 		// Allocate stuff
 		hook->pTarget = pTarget;
-		hook->pTrampoline = reinterpret_cast<u32*>(mlMalloc(4 * sizeof(u32)));
-		mlASSERT(hook->pTrampoline && "Failed to allocate trampoline buffer");
+		mlMemSet(&hook->trampoline[0], 0xab, 4*sizeof(u32));
 	}
 
 	void freeHook(HookData* hook) {
-		// Free the trampoline buffer
-		mlFree(hook->pTrampoline);
 		hookList.free(hook);
 	}
 
@@ -46,10 +43,10 @@ HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
 	if(hook == nil(HookData*))
 		return nil(HookHandle);
 
-	u32* targetInstructions = reinterpret_cast<u32*>(pTarget);
+	volatile u32* targetInstructions = reinterpret_cast<u32*>(pTarget);
 
 	// TRAMPOLINE SETUP
-	u32* pTrampolineBuf = hook->pTrampoline;
+	volatile u32* pTrampolineBuf = &hook->trampoline[0];
 
 	// Copy the original instructions to the start of the trampoline buffer
 	*pTrampolineBuf++ = targetInstructions[0];
@@ -66,7 +63,7 @@ HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
 	// If user passes a valid pointer, give them a pointer to the trampoline buffer
 	// that they can call if they want to call the original function
 	if(ppTrampoline) {
-		*ppTrampoline = reinterpret_cast<void*>(hook->pTrampoline);
+		*ppTrampoline = reinterpret_cast<void*>(&hook->trampoline[0]);
 	}
 
 	return reinterpret_cast<HookHandle>(hook);
@@ -78,8 +75,8 @@ void trampolineUnhook(HookHandle hook) {
 
 		// Copy the original instructions back to the target.
 		ml_autovar(pTarget, reinterpret_cast<u32*>(pHook->pTarget));
-		pTarget[0] = pHook->pTrampoline[0];
-		pTarget[1] = pHook->pTrampoline[1];
+		pTarget[0] = pHook->trampoline[0];
+		pTarget[1] = pHook->trampoline[1];
 
 		// Free the hook.
 		freeHook(pHook);

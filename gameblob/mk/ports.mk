@@ -1,4 +1,4 @@
-GAME ?= ssxog
+GAME := ssxog
 REGION ?= usa
 
 # US version

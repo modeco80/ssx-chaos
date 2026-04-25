@@ -46,5 +46,15 @@ void chaosDoGameHooks() {
 	hook_cGame_Update.hook();
 	hook_cGame_Render.hook();
 
+	// Do the dance
+	__asm__ volatile(
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x0\n"
+		"syscall\n" // FlushCache(0)
+		"li $3, 0x64\n"
+		"ori $4, $0, 0x2\n"
+		"syscall\n" // FlushCache(2)
+	);
+
 	eeUartPuts("Game hooks established!");
 }

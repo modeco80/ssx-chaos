@@ -41,6 +41,7 @@ USER_CFLAGS = -DIN_CHAOS_BLOB -DCHAOS_REGION_$(REGION) \
 
 # Pre deps
 EXTRATARGETS_PRE = $(LINKSCRIPT)
+EXTRATARGETS_POST = $(GAME_$(GAME)_$(REGION)_PNACH)
 
 include $(TOP)/mk/makedef.mk
 
@@ -49,4 +50,7 @@ $(OBJDIR)/chaos_blob.ld: $(OBJDIR)/ chaos_blob.ld
 	$(info Preprocessing linker script $@)
 	sed 's|@REGION@|$(REGION)|' chaos_blob.ld > $@
 
+$(GAME_$(GAME)_$(REGION)_PNACH): bin/$(NAME).elf
+	$(info Making PNACH $@)
+	./mkpnach.py $@ $(REGION)
 
