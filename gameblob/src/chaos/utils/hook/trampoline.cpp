@@ -9,8 +9,9 @@
 #include "mips.hpp"
 
 /// Per-hook saved data.
-struct __attribute__((aligned(4))) HookData {
-	/// The original target.
+struct ml_align(4) HookData {
+	/// The original target, which we use to later restore
+	/// the original instructions when unhooking.
 	void* pTarget;
 
 	/// A 4-instruction long trampoline which can call the original function.
@@ -28,7 +29,7 @@ namespace {
 			return nil(HookData*);
 		}
 
-		// Allocate stuff
+		// Initialize the hook structure that we got with the target
 		hook->pTarget = pTarget;
 		return hook;
 	}
@@ -74,6 +75,7 @@ HookHandle trampolineHook(void* pTarget, void* pHook, void** ppTrampoline) {
 	}
 
 	// Flush caches.
+	// FIXME: Having a syscall wrapper (or linking the game's) for this may be a hair nicer
 	__asm__ volatile(
 	"li $3, 0x64\n"
 	"ori $4, $0, 0x0\n"

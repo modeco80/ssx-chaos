@@ -1,32 +1,38 @@
-/* Very, very, very minimal crt0.
-   this CRT0 is only compatible with code
-   which is compiled with -G0 and thus has no
-   small data usage.
-*/
 #include <regdef.h>
 
-.set noreorder
+/*
+ * Minimal startup code for the chaos mod.
+ *
+ * Where we are jumped into, we have a lot of stuff which has been initalized for us:
+ * - a functional stack
+ * - realmem MEM_* heap
+ *
+ * so this startup code doesn't actually need to do a whole lot.
+ */
+
 .set noat
+.set noreorder
 
 .text
 
 .global _start
 _start:
-	/* TODO: zerofill the .bss sections? EE Kernel seems to
-	 do this for us already, but it might be wise to just do it anyways... */
+	/* TODO: zerofill .bss section. EE Kernel seems to
+	 zerofill the area for us already, but it might be wise to just do it anyways... */
 
-	/* Save ra */
+	/* Save registers which are clobbered on the stack */
 	addiu sp, sp, -0x8
 	sw ra, (sp)
 	sw gp, 4(sp)
 
-	/* Now that .bss should hopefully be filled,
-	   jump to the C++ entry point. */
+	/* Now that .bss should hopefully be filled, call the C++ entry point. */
 	jal chaosMain
 	nop
 
-	/* Once the entry point is finished, return back to the game code */
-	lw ra, (sp)
+	/* Restore registers which were clobbered from the stack */
 	lw gp, 4(sp)
+	lw ra, (sp)
+
+	/* Return back to the game code. */
 	jr ra
 	addiu sp, sp, 0x8

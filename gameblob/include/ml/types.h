@@ -58,8 +58,9 @@ typedef ptrdiff_t isize;
 #define nil(T) (T)0
 #define vnil ((void*)0)
 
-#define ML_WEAK __attribute__((weak))
+#define ml_weak __attribute__((weak))
 #define ml_noreturn __attribute__((noreturn))
+#define ml_align(n) __attribute__((aligned(n)))
 
 // These defines do nothing, but provide
 // keywords which are useful for grepping and such.

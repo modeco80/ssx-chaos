@@ -17,6 +17,7 @@ enum {
 };
 
 #define VOTE_MAGIC 0xa0a0b001
+#define VOTE_DEAD_MAGIC 0xd0d0b001
 
 struct Vote {
 	u32 magic;
@@ -39,6 +40,10 @@ struct Vote {
 #ifdef IN_CHAOS_BLOB
 	Vote() {
 		magic = VOTE_MAGIC;
+	}
+
+	~Vote() {
+		magic = VOTE_DEAD_MAGIC;
 	}
 #endif
 };
