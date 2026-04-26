@@ -9,7 +9,7 @@
 #include "mips.hpp"
 
 /// Per-hook saved data.
-struct HookData {
+struct __attribute__((aligned(4))) HookData {
 	/// The original target.
 	void* pTarget;
 
@@ -30,6 +30,7 @@ namespace {
 
 		// Allocate stuff
 		hook->pTarget = pTarget;
+		return hook;
 	}
 
 	void freeHook(HookData* hook) {
