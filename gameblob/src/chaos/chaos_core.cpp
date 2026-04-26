@@ -331,15 +331,17 @@ const char* ChaosCore::getEffectName(u32 id) {
 
 void ChaosCore::onTick() {
 	voteUpdate();
-	updateEffectStack();
+	//updateEffectStack();
 }
 
 void ChaosCore::onPreRender() {
-	preRenderEffectStack();
+	//preRenderEffectStack();
 }
 
 void ChaosCore::onPostRender() {
-	postRenderEffectStack();
+	//postRenderEffectStack();
+
+	render();
 }
 
 void ChaosCore::render() {

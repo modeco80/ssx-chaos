@@ -9,7 +9,7 @@
 // our cGame::update hook
 CHAOS_CLASS_HOOK_DECLARE0(void, cGame, Update) {
 	// Call the ontick handler in the ChaosCore
-	//chaosGetCore().onTick();
+	chaosGetCore().onTick();
 	hook_cGame_Update.original(klass);
 }
 

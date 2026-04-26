@@ -11,10 +11,10 @@
 #endif
 
 u32 chaosSecToTicks(float secondTime) {
-	float tickCount = secondTime * (kTicksPerSecond * 1000);
+	float tickCount = secondTime * (kTicksPerSecond);
 	return static_cast<u32>(tickCount);
 }
 
 float chaosTickToSecs(u32 tickCount) {
-	return static_cast<float>(tickCount) / (static_cast<float>(kTicksPerSecond) * 1000.f);
+	return static_cast<float>(tickCount) / (static_cast<float>(kTicksPerSecond));
 }

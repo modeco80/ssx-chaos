@@ -16,7 +16,7 @@ extern "C" void chaosMain() {
 
 	// Initialize systems we need now
 	randomInit();
-	// voteInit();
+	voteInit();
 	// chaosGetCore().init() ?
 
 	// Try and Hook game functions once the systems are initalized.

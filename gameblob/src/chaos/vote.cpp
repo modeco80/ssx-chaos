@@ -7,6 +7,7 @@
 
 #include "utils/time_conversion.hpp"
 #include "utils/random.hpp"
+#include "../ml/hw/eeuart.h"
 
 Vote* gpVote;
 
@@ -32,8 +33,10 @@ void voteCreateRandom() {
 	gpVote->tallyLock.lock();
 #endif
 
+	eeUartPuts("voteCreateRandom called");
+
 	// Guess a random tick time
-	gpVote->nrTicksLeft = chaosSecToTicks(uniformRandomf(25.f, 30.f));
+	gpVote->nrTicksLeft = chaosSecToTicks(3.f);//chaosSecToTicks(uniformRandomf(25.f, 30.f));
 
 #if 0
 	// Get some unique effect IDs from the chaos core
@@ -59,6 +62,7 @@ void voteCreateRandom() {
 /// Called at tick rate to update the vote.
 void voteUpdate() {
 	if(gpVote->nrTicksLeft-- == 0) {
+		eeUartPuts("Vote ended");
 		// Find the winning vote, or tie(s), and enable them.
 
 		// getEffectManager().enableEffect(...);
