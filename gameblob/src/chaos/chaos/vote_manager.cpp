@@ -1,15 +1,14 @@
-#include <chaos/vote.h>
-
-#include <new>
-#include <ml/abort.h>
-
-#include "chaos_core.hpp"
 #include "vote_manager.hpp"
 
-#include "../utils/time_conversion.hpp"
-#include "../utils/random.hpp"
-#include "../../ml/hw/eeuart.h"
+#include <chaos/vote.h>
+#include <ml/abort.h>
 
+#include <new>
+
+#include "../../ml/hw/eeuart.h"
+#include "../utils/random.hpp"
+#include "../utils/time_conversion.hpp"
+#include "chaos_core.hpp"
 
 // Progress bar
 // TickBar gVoteTickBar(0, 0, 448, 32);
@@ -41,7 +40,7 @@ void ChaosVoteManager::createRandomVote() {
 	eeUartPuts("ChaosVoteManager::createRandomVote() called");
 
 	// Guess a random tick time
-	pVote->nrTicksLeft = chaosSecToTicks(3.f);//chaosSecToTicks(uniformRandomf(25.f, 30.f));
+	pVote->nrTicksLeft = chaosSecToTicks(3.f); // chaosSecToTicks(uniformRandomf(25.f, 30.f));
 
 #if 0
 	// Get some unique effect IDs from the chaos core

@@ -12,7 +12,7 @@
 	   public:                                                                                           \
 		bool hook() {                                                                                    \
 			handle = trampolineHook(ml::bitCast<void*>(&funcName), (void*)&hookImpl, (void**)&original); \
-			return handle != nil(HookHandle);		\
+			return handle != nil(HookHandle);                                                            \
 		}                                                                                                \
 	} hook_##funcName;                                                                                   \
 	ret Hook_##funcName::hookImpl()
@@ -26,7 +26,7 @@
 	   public:                                                                                           \
 		bool hook() {                                                                                    \
 			handle = trampolineHook(ml::bitCast<void*>(&funcName), (void*)&hookImpl, (void**)&original); \
-			return handle != nil(HookHandle);		\
+			return handle != nil(HookHandle);                                                            \
 		}                                                                                                \
 	} hook_##funcName;                                                                                   \
 	ret Hook_##funcName::hookImpl(__VA_ARGS__)

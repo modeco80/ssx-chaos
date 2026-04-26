@@ -7,21 +7,20 @@
 extern "C" {
 #endif
 
-	u32 strlen(const char* pszString);
+u32 strlen(const char* pszString);
 
-	void* memset(void* dst, i32 c, usize len);
+void* memset(void* dst, i32 c, usize len);
 
-	void* memcpy(void* dst, const void* src, u32 len);
+void* memcpy(void* dst, const void* src, u32 len);
 
-	// TODO:
-	// - strcpy
-	// - strcat
-	// - sprintf
+// TODO:
+// - strcpy
+// - strcat
+// - sprintf
 
-
-	/// Duplicates a string on the heap. The memory must be freed with
-	/// the [mlFree()] function once the duplicated string is no longer needed.
-	char* mlStrDup(const char* pszString);
+/// Duplicates a string on the heap. The memory must be freed with
+/// the [mlFree()] function once the duplicated string is no longer needed.
+char* mlStrDup(const char* pszString);
 
 #ifdef __cplusplus
 }

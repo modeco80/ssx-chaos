@@ -40,7 +40,7 @@ void __do_global_dtors() {
 	static vfunc* ppfnDtor = &__DTOR_LIST__[1];
 	while(*ppfnDtor) {
 		ppfnDtor++;
-		(*(ppfnDtor-1))();
+		(*(ppfnDtor - 1))();
 	}
 }
 

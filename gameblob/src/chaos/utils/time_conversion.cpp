@@ -1,13 +1,12 @@
 #include "time_conversion.hpp"
 
-
 #if defined(CHAOS_REGION_pal)
-#define kTicksPerSecond 50
+	#define kTicksPerSecond 50
 #elif defined(CHAOS_REGION_usa)
-#define kTicksPerSecond 60
+	#define kTicksPerSecond 60
 #else
-// invalid/unported, assume 60
-#define kTicksPerSecond 60
+	// invalid/unported, assume 60
+	#define kTicksPerSecond 60
 #endif
 
 u32 chaosSecToTicks(float secondTime) {

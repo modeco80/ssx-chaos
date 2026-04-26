@@ -21,7 +21,7 @@ extern "C" void* memcpy(void* dst, const void* src, u32 len);
 			ml_autovar(mptr, &className::funcName);                                    \
 			memcpy(&barePointer, ((u8*)&mptr + 4), sizeof(void*));                     \
 			handle = trampolineHook(barePointer, (void*)&hookImpl, (void**)&original); \
-			return handle != nil(HookHandle);		\
+			return handle != nil(HookHandle);                                          \
 		}                                                                              \
 	} hook_##className##_##funcName;                                                   \
 	ret Hook_##className##_##funcName::hookImpl(className* klass)
@@ -38,7 +38,7 @@ extern "C" void* memcpy(void* dst, const void* src, u32 len);
 			ml_autovar(mptr, &className::funcName);                                    \
 			memcpy(&barePointer, ((u8*)&mptr + 4), sizeof(void*));                     \
 			handle = trampolineHook(barePointer, (void*)&hookImpl, (void**)&original); \
-			return handle != nil(HookHandle);		\
+			return handle != nil(HookHandle);                                          \
 		}                                                                              \
 	} hook_##className##_##funcName;                                                   \
 	ret Hook_##className##_##funcName::hookImpl(className* klass, __VA_ARGS__)

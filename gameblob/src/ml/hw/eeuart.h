@@ -1,8 +1,8 @@
 #ifndef EE_UART_H
 #define EE_UART_H
 
-#include <ml/types.h>
 #include <ml/string.h>
+#include <ml/types.h>
 
 //! This header declares helper utilities for using the EE UART periphial.
 

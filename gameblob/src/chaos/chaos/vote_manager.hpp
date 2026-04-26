@@ -8,7 +8,7 @@ class ChaosVoteManager {
 
 	void createRandomVote();
 
-public:
+   public:
 	ChaosVoteManager();
 
 	~ChaosVoteManager();

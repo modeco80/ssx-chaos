@@ -1,7 +1,7 @@
 #include "../ml/hw/eeuart.h"
 #include "chaos/chaos_core.hpp"
-#include "utils/random.hpp"
 #include "chaos/vote_manager.hpp"
+#include "utils/random.hpp"
 
 // Since we're not using the C main entry point, we have to call these by hand
 extern "C" void __do_global_ctors();

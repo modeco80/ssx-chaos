@@ -9,8 +9,8 @@
 // Need GrMan.
 #include <bx/render/graphicsman.h>
 
-#include "effect.hpp"
 #include "../utils/random.hpp"
+#include "effect.hpp"
 #include "vote_manager.hpp"
 
 enum { MAX_EFFECTS_ACTIVE = 8 };
@@ -331,20 +331,20 @@ const char* ChaosCore::getEffectName(u32 id) {
 
 void ChaosCore::onTick() {
 	chaosVoteMan()->update();
-	//updateEffectStack();
+	// updateEffectStack();
 }
 
 void ChaosCore::onPreRender() {
-	//preRenderEffectStack();
+	// preRenderEffectStack();
 }
 
 void ChaosCore::onPostRender() {
-	//postRenderEffectStack();
+	// postRenderEffectStack();
 
 	render();
 }
 
 void ChaosCore::render() {
-	//chaosVoteMan()->render();
-	// TODO: Render active effect stack
+	// chaosVoteMan()->render();
+	//  TODO: Render active effect stack
 }
