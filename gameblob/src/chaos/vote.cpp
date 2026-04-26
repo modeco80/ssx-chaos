@@ -5,6 +5,9 @@
 #include "chaos_core.hpp"
 #include "vote_blob.hpp"
 
+#include "utils/time_conversion.hpp"
+#include "utils/random.hpp"
+
 Vote* gpVote;
 
 // Progress bar
@@ -30,7 +33,7 @@ void voteCreateRandom() {
 #endif
 
 	// Guess a random tick time
-	// gpVote->nrTicksLeft = 10 * kSecond + (rand32() * 500 % 25000);
+	gpVote->nrTicksLeft = chaosSecToTicks(uniformRandomf(25.f, 30.f));
 
 #if 0
 	// Get some unique effect IDs from the chaos core

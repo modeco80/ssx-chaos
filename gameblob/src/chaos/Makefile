@@ -1,5 +1,6 @@
 NAME = ssx_og_chaos_$(REGION)
 TYPE := elf
+DEBUG ?= 0
 
 # Effect files
 EFFECTS := \
@@ -39,6 +40,11 @@ LINKLIBS := \
 # so they declare things properly.
 USER_CFLAGS = -DIN_CHAOS_BLOB -DCHAOS_REGION_$(REGION) \
 	-I bxapi/include
+
+# Release builds (to remove mlASSERTs)
+ifeq ($(DEBUG),0)
+USER_CFLAGS += -DNDEBUG
+endif
 
 # Pre deps
 EXTRATARGETS_PRE = $(LINKSCRIPT)

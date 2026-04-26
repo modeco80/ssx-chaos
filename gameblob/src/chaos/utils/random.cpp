@@ -67,6 +67,10 @@ u32 uniformRandom32(u32 low, u32 high) {
 	return randomEngine.uniformNext(low, high);
 }
 
+float uniformRandomf(float low, float high) {
+	return low + (high - low) * ((float)(randomEngine.next() & 0x7fffff | 0x3f800000) - 1.0f);
+}
+
 u32 randomBytes(u8* pBytes, u32 count) {
 	return randomEngine.nextBytes(pBytes, count);
 }
