@@ -24,7 +24,7 @@ SOURCES := \
 	chaos/game_hooks.cpp \
 	chaos/chaos_core.cpp \
 	$(EFFECTS) \
-	chaos/vote.cpp \
+	chaos/vote_manager.cpp \
 	main.cpp
 
 LINKSCRIPT = $(OBJDIR)/chaos_blob.ld

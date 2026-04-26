@@ -19,7 +19,7 @@ enum {
 #define VOTE_MAGIC 0xa0a0b001
 #define VOTE_DEAD_MAGIC 0xd0d0b001
 
-struct Vote {
+struct ChaosVote {
 	u32 magic;
 
 #ifndef NO_CHAT_VOTING
@@ -38,11 +38,11 @@ struct Vote {
 	u32 effects[CHAOS_VOTE_COUNT];
 
 #ifdef IN_CHAOS_BLOB
-	Vote() {
+	ChaosVote() {
 		magic = VOTE_MAGIC;
 	}
 
-	~Vote() {
+	~ChaosVote() {
 		magic = VOTE_DEAD_MAGIC;
 	}
 #endif

@@ -1,13 +1,13 @@
 #include "../ml/hw/eeuart.h"
 #include "chaos/chaos_core.hpp"
 #include "utils/random.hpp"
-#include "chaos/vote_blob.hpp"
+#include "chaos/vote_manager.hpp"
 
 // Since we're not using the C main entry point, we have to call these by hand
 extern "C" void __do_global_ctors();
 extern "C" void __do_global_dtors();
 
-// see game_hooks.cpp
+// see chaos/game_hooks.cpp
 bool chaosDoGameHooks();
 
 extern "C" void chaosMain() {
@@ -16,13 +16,14 @@ extern "C" void chaosMain() {
 
 	// Initialize systems we need now
 	randomInit();
-	voteInit();
-	// chaosGetCore().init() ?
+	chaosVoteInit();
+	// chaosGetCore().init()?
 
 	// Try and Hook game functions once the systems are initalized.
 	// If this fails, shut everything down and give up.
 	if(!chaosDoGameHooks()) {
 		eeUartPuts("Failed to hook game functions. Shutting down.");
+		chaosVoteShutdown();
 		__do_global_dtors();
 		return;
 	}

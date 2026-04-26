@@ -11,7 +11,7 @@
 
 #include "effect.hpp"
 #include "../utils/random.hpp"
-#include "vote_blob.hpp"
+#include "vote_manager.hpp"
 
 enum { MAX_EFFECTS_ACTIVE = 8 };
 
@@ -330,7 +330,7 @@ const char* ChaosCore::getEffectName(u32 id) {
 // Standard hooks
 
 void ChaosCore::onTick() {
-	voteUpdate();
+	chaosVoteMan()->update();
 	//updateEffectStack();
 }
 
@@ -345,6 +345,6 @@ void ChaosCore::onPostRender() {
 }
 
 void ChaosCore::render() {
-	// voteRender();
+	//chaosVoteMan()->render();
 	// TODO: Render active effect stack
 }
