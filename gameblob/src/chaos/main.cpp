@@ -23,7 +23,7 @@ extern "C" void chaosMain() {
 	chaosDoGameHooks();
 
 	// Once all that has gone smoothly, print some nice text I guess
-	eeUartPuts("Hello World? Is this thing on?");
+	eeUartPuts("SSX Chaos Mod initalized");
 
 	// Return. We're all ready to go from here, so we can just let the game
 	// get back to work. We'll get calls from things we've hooked later on.

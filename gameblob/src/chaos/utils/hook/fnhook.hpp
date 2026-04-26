@@ -10,8 +10,9 @@
 		static ret hookImpl();                                                                           \
                                                                                                          \
 	   public:                                                                                           \
-		void hook() {                                                                                    \
+		bool hook() {                                                                                    \
 			handle = trampolineHook(ml::bitCast<void*>(&funcName), (void*)&hookImpl, (void**)&original); \
+			return handle != nil(HookHandle);		\
 		}                                                                                                \
 	} hook_##funcName;                                                                                   \
 	ret Hook_##funcName::hookImpl()
@@ -23,8 +24,9 @@
 		static ret hookImpl(__VA_ARGS__);                                                                \
                                                                                                          \
 	   public:                                                                                           \
-		void hook() {                                                                                    \
+		bool hook() {                                                                                    \
 			handle = trampolineHook(ml::bitCast<void*>(&funcName), (void*)&hookImpl, (void**)&original); \
+			return handle != nil(HookHandle);		\
 		}                                                                                                \
 	} hook_##funcName;                                                                                   \
 	ret Hook_##funcName::hookImpl(__VA_ARGS__)

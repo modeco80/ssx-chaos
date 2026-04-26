@@ -41,7 +41,7 @@ LINKLIBS := \
 USER_CFLAGS = -DIN_CHAOS_BLOB -DCHAOS_REGION_$(REGION) \
 	-I bxapi/include
 
-# Release builds (to remove mlASSERTs)
+# Release builds (to remove mlASSERTs:)
 ifeq ($(DEBUG),0)
 USER_CFLAGS += -DNDEBUG
 endif
