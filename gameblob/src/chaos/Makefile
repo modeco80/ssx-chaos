@@ -15,6 +15,7 @@ RUNTIME := \
 
 UTILS := \
 	utils/random.cpp \
+	utils/time_conversion.cpp \
 	utils/hook/trampoline.cpp
 
 SOURCES := \
