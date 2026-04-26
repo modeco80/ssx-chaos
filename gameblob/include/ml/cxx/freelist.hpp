@@ -2,7 +2,7 @@
 #define ML_CXX_FREELIST_HPP
 
 #include <ml/mem.h>
-
+#include <ml/string.h>
 #include <ml/cxx/bitset.hpp>
 
 namespace ml {
@@ -27,7 +27,7 @@ namespace ml {
 		T* allocate() {
 			for(u32 i = 0; i < NumItems; ++i) {
 				if(!usedSet[i]) {
-					mlMemSet(&pItems[i], 0, sizeof(T));
+					memset(&pItems[i], 0, sizeof(T));
 					usedSet.set(i);
 					return &pItems[i];
 				}

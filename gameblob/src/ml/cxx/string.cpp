@@ -36,15 +36,15 @@ namespace ml {
 
 	void String::assign(const String& str) {
 		resize(str.getLength());
-		mlMemCpy(&mem[0], &str.mem[0], str.getLength());
+		memcpy(&mem[0], &str.mem[0], str.getLength());
 	}
 
 	void String::assign(const char* str) {
 		if(!str)
 			return;
-		u32 len = mlStrLen(str);
+		u32 len = strlen(str);
 		resize(len);
-		mlMemCpy(&mem[0], str, len);
+		memcpy(&mem[0], str, len);
 	}
 
 	void String::resize(u32 len) {
@@ -69,7 +69,7 @@ namespace ml {
 			mem = (char*)mlMalloc(newCapacity);
 
 			if(memOld) {
-				mlMemCpy(&mem[0], &memOld[0], length);
+				memcpy(&mem[0], &memOld[0], length);
 				mlFree(memOld);
 			}
 

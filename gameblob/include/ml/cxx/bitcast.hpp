@@ -1,8 +1,7 @@
 #ifndef ML_CXX_BITCAST_HPP
 #define ML_CXX_BITCAST_HPP
 
-#include <ml/mem.h>
-#include <ml/types.h>
+#include <ml/string.h>
 
 namespace ml {
 
@@ -10,7 +9,7 @@ namespace ml {
 	template <class T, class U>
 	inline T bitCast(U u) {
 		T t;
-		mlMemCpy(&t, &u, sizeof(T));
+		memcpy(&t, &u, sizeof(T));
 		return t;
 	}
 

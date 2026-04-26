@@ -7,11 +7,10 @@ EFFECTS := \
 	effects/no_stats.cpp
 
 # Runtime sources (startup code, and code
-# needed to link the ml libs properly)
+# needed to link the ml libs)
 RUNTIME := \
 	crt0.S \
 	runtime/ml_memory.cpp \
-	runtime/ml_string.cpp \
 	runtime/ml_abort.cpp
 
 UTILS := \

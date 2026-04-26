@@ -1,8 +1,8 @@
 #ifndef EE_UART_H
 #define EE_UART_H
 
-#include <ml/mem.h>
 #include <ml/types.h>
+#include <ml/string.h>
 
 //! This header declares helper utilities for using the EE UART periphial.
 
@@ -31,7 +31,7 @@ typedef struct eeUartLineBuffer {
 	u32 bufferWriteIndex;
 #ifdef __cplusplus
 	eeUartLineBuffer() {
-		mlMemSet(this, 0, sizeof(*this));
+		memset(this, 0, sizeof(*this));
 	}
 
 	// helper constructor to make initalizing this structure less error prone

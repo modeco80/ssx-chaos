@@ -61,6 +61,9 @@ void mlIoDirRewind(i32 dirfd);
 /// Closes a directory.
 void mlIoDirClose(i32 dirfd);
 
+// TODO:
+// - mlPrintf(const char*, ...);
+
 #ifdef __cplusplus
 namespace ml {
 	/// Inline wrapper of the mlIo file APIs to make using them a bit cleaner,
@@ -68,7 +71,7 @@ namespace ml {
 	///
 	/// Example usage:
 	/// ```cpp
-	/// ml::IoFile file("my_file.bin", ml::IoFile::Read);
+	/// ml::IoFile file("host:my_file.bin", ml::IoFile::Read);
 	/// if(file.ok()) {
 	///     char buf[8];
 	///     i32 count = file.read(&buf[0], sizeof(buf));
