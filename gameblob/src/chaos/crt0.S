@@ -1,5 +1,7 @@
 #include <regdef.h>
 
+#define at $1
+
 /*
  * Minimal startup code for the chaos mod.
  *
@@ -25,10 +27,25 @@ _start:
 	sw ra, (sp)
 	sw gp, 4(sp)
 
-	/* Now that .bss should hopefully be filled, call the C++ entry point. */
+	/* Call C++ global constructors */
+	jal __do_global_ctors
+	nop
+
+	/* Now that .bss should hopefully be filled, and
+	 we've called global constructors, call the C++ entry point. */
 	jal chaosMain
 	nop
 
+	slti at, v0, 0x0
+	beq at, zero, .Lokay
+	nop
+
+	/* If we get here, chaosMain() > 0, so something went wrong.
+		Call global destructors. */
+	jal __do_global_dtors
+	nop
+
+.Lokay:
 	/* Restore registers which were clobbered from the stack */
 	lw gp, 4(sp)
 	lw ra, (sp)

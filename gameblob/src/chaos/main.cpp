@@ -3,17 +3,10 @@
 #include "chaos/vote_manager.hpp"
 #include "utils/random.hpp"
 
-// Since we're not using the C main entry point, we have to call these by hand
-extern "C" void __do_global_ctors();
-extern "C" void __do_global_dtors();
-
 // see chaos/game_hooks.cpp
 bool chaosDoGameHooks();
 
-extern "C" void chaosMain() {
-	// call C++ global constructors first
-	__do_global_ctors();
-
+extern "C" int chaosMain() {
 	// Initialize systems we need now
 	randomInit();
 	chaosVoteInit();
@@ -24,8 +17,8 @@ extern "C" void chaosMain() {
 	if(!chaosDoGameHooks()) {
 		eeUartPuts("Failed to hook game functions. Shutting down.");
 		chaosVoteShutdown();
-		__do_global_dtors();
-		return;
+		// Tell the startup code to tear down things.
+		return 1;
 	}
 
 	// Once all that has gone smoothly, print some nice text I guess
@@ -33,4 +26,5 @@ extern "C" void chaosMain() {
 
 	// We're all ready to go from here, so we can just let the game
 	// get back to work. We'll get calls from things we've hooked later on.
+	return 0;
 }
