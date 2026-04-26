@@ -1,10 +1,10 @@
 #include <bx/main/game.h>
 #include <bx/render/graphicsman.h>
 
-#include "../ml/hw/eeuart.h"
+#include "../../ml/hw/eeuart.h"
 #include "chaos_core.hpp"
-#include "utils/hook/classhook.hpp"
-#include "utils/hook/trampoline.hpp"
+#include "../utils/hook/classhook.hpp"
+#include "../utils/hook/trampoline.hpp"
 
 // our cGame::update hook
 CHAOS_CLASS_HOOK_DECLARE0(void, cGame, Update) {

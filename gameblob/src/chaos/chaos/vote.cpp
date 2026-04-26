@@ -5,9 +5,9 @@
 #include "chaos_core.hpp"
 #include "vote_blob.hpp"
 
-#include "utils/time_conversion.hpp"
-#include "utils/random.hpp"
-#include "../ml/hw/eeuart.h"
+#include "../utils/time_conversion.hpp"
+#include "../utils/random.hpp"
+#include "../../ml/hw/eeuart.h"
 
 Vote* gpVote;
 

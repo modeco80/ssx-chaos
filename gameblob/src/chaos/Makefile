@@ -4,7 +4,7 @@ DEBUG ?= 0
 
 # Effect files
 EFFECTS := \
-	effects/no_stats.cpp
+	chaos/effects/no_stats.cpp
 
 # Runtime sources (startup code, and code
 # needed to link the ml libs)
@@ -21,10 +21,10 @@ UTILS := \
 SOURCES := \
 	$(RUNTIME) \
 	$(UTILS) \
-	game_hooks.cpp \
-	chaos_core.cpp \
+	chaos/game_hooks.cpp \
+	chaos/chaos_core.cpp \
 	$(EFFECTS) \
-	vote.cpp \
+	chaos/vote.cpp \
 	main.cpp
 
 LINKSCRIPT = $(OBJDIR)/chaos_blob.ld

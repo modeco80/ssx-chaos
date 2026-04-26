@@ -10,7 +10,7 @@
 #include <bx/render/graphicsman.h>
 
 #include "effect.hpp"
-#include "utils/random.hpp"
+#include "../utils/random.hpp"
 #include "vote_blob.hpp"
 
 enum { MAX_EFFECTS_ACTIVE = 8 };
