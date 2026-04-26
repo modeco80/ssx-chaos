@@ -29,16 +29,16 @@ CHAOS_CLASS_HOOK_DECLARE0(void, cGame, Render) {
 
 extern u32 cGame_Render_NopPoint[2];
 
-void chaosDoGameHooks() {
+bool chaosDoGameHooks() {
 	// Hook functions
 	if(!hook_cGame_Update.hook()) {
 		eeUartPuts("Could not hook cGame::Update?");
-		return;
+		return false;
 	}
 
 	if(!hook_cGame_Render.hook()) {
 		eeUartPuts("Could not hook cGame::Render?");
-		return;
+		return false;
 	}
 
 	// If we get here, all of our hooks succeeded.
@@ -46,5 +46,5 @@ void chaosDoGameHooks() {
 	cGame_Render_NopPoint[0] = 0x0;
 	cGame_Render_NopPoint[1] = 0x0;
 
-	eeUartPuts("Game functions hooked!");
+	return true;
 }
