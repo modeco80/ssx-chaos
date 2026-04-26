@@ -19,6 +19,7 @@ typedef void (*vfunc)();
 
 // Global constructors
 extern vfunc __CTOR_LIST__[];
+extern vfunc __DTOR_LIST__[];
 
 void __do_global_ctors() {
 	u32 nrPtrs = (u32)__CTOR_LIST__[0];
@@ -32,6 +33,14 @@ void __do_global_ctors() {
 	// Call constructors in reverse order.
 	for(u32 i = nrPtrs; i >= 1; i--) {
 		__CTOR_LIST__[i]();
+	}
+}
+
+void __do_global_dtors() {
+	static vfunc* ppfnDtor = &__DTOR_LIST__[1];
+	while(*ppfnDtor) {
+		ppfnDtor++;
+		(*(ppfnDtor-1))();
 	}
 }
 
