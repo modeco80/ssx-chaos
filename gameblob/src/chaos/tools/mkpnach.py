@@ -3,7 +3,7 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '')))
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 # modules we depend on
 from utils.mips import Mips
@@ -15,17 +15,12 @@ from utils.ldparse import LdScript
 def yieldWordChunksFromBytes(byteArray: bytes):
 	length = len(byteArray)
 	if length % 4 != 0:
-		print(f'WARNING: Core is not word-aligned?')
+		raise RuntimeError(f'Core is not word-aligned by {length % 4} bytes. Fix please.')
 	counter = 0
 	while True:
 		if counter >= length:
 			break
-		chunk = byteArray[counter:counter+4]
-		if len(chunk) != 4:
-			#print(f'a {len(chunk)}')
-			#print(chunk)
-			break
-		yield chunk
+		yield byteArray[counter:counter+4]
 		counter += 4
 
 # The fun begins...
@@ -45,7 +40,10 @@ def main():
 					cheat.setAddress(hookAddress)
 					cheat.word(Mips.j(targetAddress))
 
-				# Hook to the start
+				# Hook to the end of bxInitREAL(). This hook point is chosen for multiple reasons:
+				# - The REAL libraries, including the realmem MEM_ heap (which we depend on), are initalized
+				# - Convinence
+				# - It's one of the earliest spots we can hook to
 				jHook(ldScript.symbol('bxInitREAL_HookPoint'), elf.symbol('_start'))
 
 				# For our last step, poke in the code blob.

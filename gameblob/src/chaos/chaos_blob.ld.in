@@ -1,16 +1,19 @@
 
 /* Include the api file */
 INCLUDE bxapi/ld/@REGION@.ld
+
+BLOB_LOAD_ADDRESS = 0x000a0000;
+
 SECTIONS {
-	BLOB_LOAD_ADDRESS = 0x000a0000;
 
 	. = BLOB_LOAD_ADDRESS;
 	_begin = BLOB_LOAD_ADDRESS;
 
-	.text BLOB_LOAD_ADDRESS : {
+	.text ALIGN(4) : {
 		*(.text)
 		*(.text.*)
     	*(.gnu.linkonce.t*)
+    	. = ALIGN(4);
 	}
 
 	.ctors : {
@@ -34,13 +37,16 @@ SECTIONS {
 
 	.data : { 
 		*(.data)
-	    	*(.data.*)
-    		*(.gnu.linkonce.d*)
+		*(.data.*)
+    	*(.gnu.linkonce.d*)
+    	. = ALIGN(4);
 	 }
+
 	.rodata : {
 		*(.rodata)
 		*(.rodata.*)
 		*(.gnu.linkonce.r*)
+		. = ALIGN(4);
 	}
 	.rdata : { *(.rdata) }
 	.lit8 : { *(.lit8) }
@@ -49,7 +55,6 @@ SECTIONS {
 	.sbss : { _fbss = .; *(.sbss) *(.scommon) }
 	.bss : { *(.bss) }
 
-	_end = ALIGN(4);
-
-
+	. = ALIGN(4);
+	_end = .;
 }
