@@ -5,6 +5,7 @@
 strlen = 0x0025bcf8;
 memcpy = 0x0025a55c;
 memset = 0x0025a60c;
+sprintf = 0x0025b630;
 
 /* bx/main */
 
@@ -16,6 +17,9 @@ bxInitREAL_HookPoint = 0x0018a7e0;
 Update__5cGame = 0x00189c70;
 Render__5cGame = 0x001bf350;
 cGame_Render_NopPoint = 0x001bf948;
+
+/* cApplication */
+TheApp = 0x002852f8;
 
 
 /* bx/render */

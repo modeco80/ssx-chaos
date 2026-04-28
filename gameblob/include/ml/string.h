@@ -2,6 +2,7 @@
 #define ML_API_STRING_H
 
 #include <ml/types.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +18,8 @@ void* memcpy(void* dst, const void* src, u32 len);
 // - strcpy
 // - strcat
 // - sprintf
+
+int sprintf(char* out, const char* format, ...);
 
 /// Duplicates a string on the heap. The memory must be freed with
 /// the [mlFree()] function once the duplicated string is no longer needed.
