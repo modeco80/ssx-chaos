@@ -4,6 +4,8 @@
 #include "../../ml/hw/eeuart.h"
 #include "../utils/hook/classhook.hpp"
 #include "../utils/hook/trampoline.hpp"
+#include <bx/main/application.h>
+#include <bx/render/font.h>
 #include "chaos_core.hpp"
 
 // our cGame::update hook
@@ -20,6 +22,8 @@ CHAOS_CLASS_HOOK_DECLARE0(void, cGame, Render) {
 	// chaosGetCore().onPreRender();
 	hook_cGame_Render.original(klass);
 	// chaosGetCore().onPostRender();
+
+	TheApp.GetGame()->mpLocaleFont->Text(120., 120., 1., "hello world?");
 
 	// Because we nopped out cGraphicsMan::Submit in cGame::Render,
 	// we call it after onPostRender() is called.

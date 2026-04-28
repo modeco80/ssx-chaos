@@ -28,6 +28,9 @@ TheApp = 0x002852f8;
 GrMan = 0x00295e90;
 Submit__12cGraphicsMan = 0x001689a8;
 
+/* cFont (this will be fun, theres a TON of overloads) */
+Text__5cFontfffPCc = 0x001a1780;
+
 /* REALMEM */
 MEM_alloc = 0x0023a448;
 MEM_free = 0x0023a998;
