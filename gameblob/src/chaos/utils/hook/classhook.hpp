@@ -4,10 +4,7 @@
 // Class hooking helpers.
 
 #include "trampoline.hpp"
-
-// We have to use memcpy() specifically to tell gcc we're type punning, which kind of sucks.
-// Oh Well:tm:
-extern "C" void* memcpy(void* dst, const void* src, u32 len);
+#include <ml/string.h>
 
 #define CHAOS_CLASS_HOOK_DECLARE0(ret, className, funcName)                            \
 	class Hook_##className##_##funcName {                                              \

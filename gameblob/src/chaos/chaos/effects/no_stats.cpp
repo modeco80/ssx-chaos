@@ -1,4 +1,3 @@
-#include "../../../ml/hw/eeuart.h"
 #include "../chaos_core.hpp"
 #include "../effect.hpp"
 
@@ -11,15 +10,11 @@ class NoStatsEffect : public ChaosEffectImpl<0x0> {
 		// For each player:
 		// Copy their ingame BE data into this class's data
 		// Fill the stats with zeros
-
-		eeUartPuts("Effect enabled");
 	}
 
 	void disable() ml_override {
 		// For each player:
 		// Copy back the stats
-
-		eeUartPuts("Effect disabled");
 	}
 
 	// We don't need any of the standard hooks because the game already

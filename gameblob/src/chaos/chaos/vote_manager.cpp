@@ -5,7 +5,7 @@
 
 #include <new>
 
-#include "../../ml/hw/eeuart.h"
+#include "../utils/log.hpp"
 #include "../utils/random.hpp"
 #include "../utils/time_conversion.hpp"
 #include "chaos_core.hpp"
@@ -37,7 +37,7 @@ void ChaosVoteManager::createRandomVote() {
 	pVote->tallyLock.lock();
 #endif
 
-	eeUartPuts("ChaosVoteManager::createRandomVote() called");
+	chaosLog(LogInfo, "ChaosVoteManager::createRandomVote() called");
 
 	// Guess a random tick time
 	pVote->nrTicksLeft = chaosSecToTicks(3.f); // chaosSecToTicks(uniformRandomf(25.f, 30.f));
@@ -66,7 +66,7 @@ void ChaosVoteManager::createRandomVote() {
 /// Called at tick rate to update the vote.
 void ChaosVoteManager::update() {
 	if(pVote->nrTicksLeft-- == 0) {
-		eeUartPuts("Vote ended");
+		chaosLog(LogInfo, "Vote ended");
 		// Find the winning vote, or tie(s), and enable them.
 
 		// getEffectManager().enableEffect(...);

@@ -3,9 +3,8 @@
 #include <bx/render/font.h>
 #include <bx/render/graphicsman.h>
 
-#include "../../ml/hw/eeuart.h"
+#include "../utils/log.hpp"
 #include "../utils/hook/classhook.hpp"
-#include "../utils/hook/trampoline.hpp"
 #include "chaos_core.hpp"
 
 // our cGame::update hook
@@ -36,12 +35,12 @@ extern u32 cGame_Render_NopPoint[2];
 bool chaosDoGameHooks() {
 	// Hook functions
 	if(!hook_cGame_Update.hook()) {
-		eeUartPuts("Could not hook cGame::Update?");
+		chaosLog(LogErr, "Could not hook cGame::Update?");
 		return false;
 	}
 
 	if(!hook_cGame_Render.hook()) {
-		eeUartPuts("Could not hook cGame::Render?");
+		chaosLog(LogErr, "Could not hook cGame::Render?");
 		return false;
 	}
 
