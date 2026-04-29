@@ -6,6 +6,7 @@ strlen = 0x0025bcf8;
 memcpy = 0x0025a55c;
 memset = 0x0025a60c;
 sprintf = 0x0025b630;
+vsprintf = 0x0025e858;
 
 /* bx/main */
 

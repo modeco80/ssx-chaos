@@ -4,7 +4,8 @@ DEBUG ?= 0
 
 # Effect files
 EFFECTS := \
-	chaos/effects/no_stats.cpp
+	chaos/effects/no_stats.cpp \
+	chaos/effects/low_fps.cpp
 
 # Runtime sources (startup code, and code
 # needed to link the ml libs)
@@ -15,6 +16,7 @@ RUNTIME := \
 
 UTILS := \
 	utils/random.cpp \
+	utils/log.cpp \
 	utils/time_conversion.cpp \
 	utils/hook/trampoline.cpp
 

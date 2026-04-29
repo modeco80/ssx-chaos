@@ -4,9 +4,16 @@
 #include <ml/types.h>
 
 class ChaosEffect; // We only need a fwd-decl for this
+class ChaosCoreImpl;
 
 class ChaosCore {
+	bool bIsGameRendering;
+	ChaosCoreImpl* pImpl;
+
    public:
+	ChaosCore();
+	~ChaosCore();
+
 	/// Registers an effect.
 	void registerEffect(ChaosEffect* effect);
 
@@ -21,6 +28,12 @@ class ChaosCore {
 	const char* getEffectName(u32 id);
 
 	void clearEffects();
+
+	/// Query if the game is rendering things, or if we are. If we are,
+	/// any hooks which play with graphics state should do original things.
+	bool isGameRendering() const {
+		return bIsGameRendering;
+	}
 
 	// Standard hooks
 

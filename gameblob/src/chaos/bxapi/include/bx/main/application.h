@@ -12,7 +12,7 @@ class cLoadMan;
 // we dont really care too much about them. they're useful too I guess?
 
 class cVenueDB {
-public:
+   public:
 	int venueCount;
 	struct tListEntry {
 		char bigFileName[64];
@@ -25,14 +25,14 @@ public:
 };
 
 class cBigfileMount {
-public:
+   public:
 	u32 mBigStatus;
 	char mBigFileName[129];
 	u32 mBigHandle;
 };
 
 class cApplication {
-public:
+   public:
 	int mVbiHandle;
 	void* mLocale2;
 	int mLocaleSize;
@@ -56,7 +56,9 @@ public:
 
 	u32 mShowFPSDisplay;
 
-	cGame* GetGame() const { return mpGame; }
+	cGame* GetGame() const {
+		return mpGame;
+	}
 };
 
 // Singleton app.

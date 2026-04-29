@@ -19,6 +19,7 @@ void* memcpy(void* dst, const void* src, u32 len);
 // - strcat
 // - sprintf
 
+int vsprintf(char* pszOut, const char* pszFormat, va_list val);
 int sprintf(char* out, const char* format, ...);
 
 /// Duplicates a string on the heap. The memory must be freed with

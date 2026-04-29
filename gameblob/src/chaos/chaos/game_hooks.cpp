@@ -1,11 +1,11 @@
+#include <bx/main/application.h>
 #include <bx/main/game.h>
+#include <bx/render/font.h>
 #include <bx/render/graphicsman.h>
 
 #include "../../ml/hw/eeuart.h"
 #include "../utils/hook/classhook.hpp"
 #include "../utils/hook/trampoline.hpp"
-#include <bx/main/application.h>
-#include <bx/render/font.h>
 #include "chaos_core.hpp"
 
 // our cGame::update hook

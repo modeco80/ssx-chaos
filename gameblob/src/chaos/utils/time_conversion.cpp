@@ -1,5 +1,7 @@
 #include "time_conversion.hpp"
 
+#include <bx/main/application.h>
+
 #if defined(CHAOS_REGION_pal)
 	#define kTicksPerSecond 50
 #elif defined(CHAOS_REGION_usa)

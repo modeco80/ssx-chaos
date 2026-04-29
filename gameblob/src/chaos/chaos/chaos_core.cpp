@@ -2,6 +2,7 @@
 
 #include <ml/abort.h>
 
+#include <ml/cxx/fixedvec.hpp>
 #include <ml/cxx/freelist.hpp>
 #include <ml/cxx/singleton.hpp>
 #include <ml/cxx/vec.hpp>
@@ -9,6 +10,7 @@
 // Need GrMan.
 #include <bx/render/graphicsman.h>
 
+#include "../utils/log.hpp"
 #include "../utils/random.hpp"
 #include "effect.hpp"
 #include "vote_manager.hpp"
@@ -30,17 +32,19 @@ struct ActiveEffectInfo {
 
 // Global data.
 
-namespace {
+class ChaosCoreImpl {
+	// TODO: registered effects could be a seperate class, for now this is fine
+
 	ml::Vec<RegisteredEffect> registeredEffects;
-	ml::FreeList<ActiveEffectInfo, MAX_EFFECTS_ACTIVE> activeEffectStack;
-	ChaosCore gChaosCore;
+	ml::FixedVec<ActiveEffectInfo, MAX_EFFECTS_ACTIVE> activeEffectStack;
 
-	// Registered effects
-
+   public:
 	i32 getEffectIdIndex(u32 id) {
-		for(u32 i = 0; i < registeredEffects.size(); ++i)
-			if(registeredEffects[i].id == id)
-				return id;
+		for(u32 i = 0; i < registeredEffects.size(); ++i) {
+			if(registeredEffects[i].id == id) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -61,224 +65,169 @@ namespace {
 		return registeredEffects[uniformRandom32(0, registeredEffects.size())].id;
 	}
 
-	// Effect stack routines (poor name, but it originally really was going to be a stack.)
+	void registerEffect(ChaosEffect* effect) {
+		// In release, we just handle this by not actually trying to add the effect.
+		mlASSERT(getEffectIdIndex(effect->getId()) == -1 && "DUPLICATE EFFECT ID FIX BROKEN CODE");
+		if(getEffectIdIndex(effect->getId()) != -1)
+			return;
+
+		chaosLogf(LogInfo, "Registering effect \"%s\"", effect->getName());
+
+		RegisteredEffect registerMe;
+		registerMe.id = effect->getId();
+		registerMe.pEffect = effect;
+		registeredEffects.pushBack(registerMe);
+	}
+
+   private:
+	class FindEffectPredicate {
+		ChaosEffect* pFindEffect;
+
+	   public:
+		FindEffectPredicate(ChaosEffect* pEffect)
+			: pFindEffect(pEffect) {
+		}
+
+		bool operator()(const ActiveEffectInfo& info) const {
+			return info.pEffect == pFindEffect;
+		}
+	};
+
+	class OnFramePredicate {
+	   public:
+		ml::FixedVec<ChaosEffect*, MAX_EFFECTS_ACTIVE> removeList;
+
+		bool operator()(ActiveEffectInfo& pActiveEffectInfo) {
+			pActiveEffectInfo.pEffect->onFrame();
+
+			// Update the tick remaining count, which possibly may result in us
+			// removing the effect from the effect list. We defer this to
+			// after iteration using a FixedVec<> we store effect pointers into.
+			if(pActiveEffectInfo.ticksRemaining-- == 0) {
+				removeList.push(pActiveEffectInfo.pEffect);
+			}
+
+			return true;
+		}
+	};
+
+	class PreRenderPredicate {
+	   public:
+		bool operator()(const ActiveEffectInfo& pActiveEffectInfo) const {
+			pActiveEffectInfo.pEffect->onPreRender();
+			return true;
+		}
+	};
+
+	class PostRenderPredicate {
+	   public:
+		bool operator()(const ActiveEffectInfo& pActiveEffectInfo) const {
+			pActiveEffectInfo.pEffect->onPostRender();
+			return true;
+		}
+	};
+
+	u32 getActiveEffectIndex(ChaosEffect* pEffect) {
+		FindEffectPredicate finder(pEffect);
+		return activeEffectStack.find(finder);
+	}
+
+	bool doesEffectExistInStack(ChaosEffect* pEffect) {
+		return getActiveEffectIndex(pEffect) != -1;
+	}
+
+   public:
+	// Effect stack routines
 
 	u32 getActiveEffectIds(u32* pEffectIds) {
-		// we dont have lambdas so be happy with this
-		class Iter {
-			u32* pEffectIds;
-
-		   public:
-			explicit Iter(u32* pEffectIds)
-				: pEffectIds(pEffectIds) {
-			}
-
-			u32* getEndPtr() const {
-				return pEffectIds;
-			}
-
-			bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
-				*pEffectIds++ = pActiveEffectInfo->pEffect->getId();
-				return true;
-			}
-
-			static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-				return reinterpret_cast<Iter*>(user)->forEachCb(pActiveEffectInfo);
-			}
-		};
-
-		Iter iterState(pEffectIds);
-		activeEffectStack.forEachItem(&Iter::forEachCbImpl, &iterState);
-		return iterState.getEndPtr() - pEffectIds;
+		for(u32 i = 0; i < activeEffectStack.size(); ++i)
+			*pEffectIds++ = activeEffectStack[i].pEffect->getId();
+		return activeEffectStack.size();
 	}
 
-	bool doesEffectIdExistInStack(u32 id) {
-		ChaosEffect* pEffect = getEffectById(id);
-
-		// Well, we can't confirm something we don't have exists
-		if(pEffect != nil(ChaosEffect*))
-			return false;
-
-		// we dont have lambdas so be happy with this
-		class Iter {
-			bool found;
-			ChaosEffect* pLookingEffect;
-
-		   public:
-			explicit Iter(ChaosEffect* pLookingEffect)
-				: pLookingEffect(pLookingEffect) {
-			}
-
-			bool foundEffect() const {
-				return found;
-			}
-
-			bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
-				if(pActiveEffectInfo->pEffect == pLookingEffect) {
-					found = true;
-					return false;
-				}
-
-				return true;
-			}
-
-			static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-				return reinterpret_cast<Iter*>(user)->forEachCb(pActiveEffectInfo);
-			}
-		};
-
-		Iter iterState(pEffect);
-		activeEffectStack.forEachItem(&Iter::forEachCbImpl, &iterState);
-
-		return iterState.foundEffect();
-	}
-
-	void removeFromEffectStack(u32 id) {
+	/// Removes an effect from the effect stack.
+	void removeFromEffectStack(ChaosEffect* pEffect) {
 		// we can't exactly remove from what isn't there yet
-		if(!doesEffectIdExistInStack(id))
-			return;
-
-		class FindActiveEffectInfo {
-			ActiveEffectInfo* pActiveEffectInfo;
-			u32 id;
-
-		   public:
-			explicit FindActiveEffectInfo(u32 id)
-				: id(id) {
-			}
-
-			ActiveEffectInfo* getInfo() const {
-				return pActiveEffectInfo;
-			}
-
-			bool forEachCb(ActiveEffectInfo* effectInfo) {
-				if(effectInfo->pEffect->getId() == id) {
-					pActiveEffectInfo = effectInfo;
-					return false;
-				}
-
-				return true;
-			}
-
-			static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-				return reinterpret_cast<FindActiveEffectInfo*>(user)->forEachCb(pActiveEffectInfo);
-			}
-		};
-
-		FindActiveEffectInfo iterState(id);
-		activeEffectStack.forEachItem(&FindActiveEffectInfo::forEachCbImpl, &iterState);
-
-		ActiveEffectInfo* pInfo = iterState.getInfo();
-		mlASSERT(pInfo != nil(ActiveEffectInfo*));
-
-		// Disable the effect
-		pInfo->pEffect->disable();
-		activeEffectStack.free(pInfo);
+		mlASSERT(doesEffectExistInStack(pEffect) == true);
+		u32 index = getActiveEffectIndex(pEffect);
+		pEffect->disable();
+		activeEffectStack.remove(index);
 	}
 
-	void addToEffectStack(u32 id, u32 tickDuration) {
+	void addToEffectStack(ChaosEffect* pEffect, u32 tickDuration) {
+		mlASSERT(pEffect != nil(ChaosEffect*)); // already checked beforehand
+
 		// Don't duplicate effects
-		if(doesEffectIdExistInStack(id))
+		if(doesEffectExistInStack(pEffect)) {
 			return;
+		}
 
 		ActiveEffectInfo info;
-		info.pEffect = getEffectById(id);
+		info.pEffect = pEffect;
 		info.ticksRemaining = tickDuration;
 
-		ml_autovar(pAllocatedEffect, activeEffectStack.insert(info));
-		if(pAllocatedEffect == nil(ActiveEffectInfo*)) {
-			// remove the last effect, and then recurse (try again) which should hopefully
-			// only occur once
-			ml_autovar(pLastEffect, activeEffectStack.lastAllocatedItem());
-			removeFromEffectStack(pLastEffect->pEffect->getId());
+		if(!activeEffectStack.push(info)) {
+			// TODO: Find effect with lowest tick count and replace that instead
+			ActiveEffectInfo old = activeEffectStack.pop();
+			old.pEffect->disable();
 
-			addToEffectStack(id, tickDuration);
+			activeEffectStack.push(info);
 		}
+
+		info.pEffect->enable();
 	}
 
-	// tickers
-
-	class OnFrame {
-	   public:
-		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
-			pActiveEffectInfo->pEffect->onFrame();
-
-			// Update the tick count, which possibly may result in us
-			// removing the effect from the effect list.
-			if(pActiveEffectInfo->ticksRemaining-- == 0) {
-				removeFromEffectStack(pActiveEffectInfo->pEffect->getId());
-			}
-
-			return true;
-		}
-
-		static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-			return reinterpret_cast<OnFrame*>(user)->forEachCb(pActiveEffectInfo);
-		}
-	};
-
-	class PreRender {
-	   public:
-		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
-			pActiveEffectInfo->pEffect->onPreRender();
-			return true;
-		}
-
-		static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-			return reinterpret_cast<PreRender*>(user)->forEachCb(pActiveEffectInfo);
-		}
-	};
-
-	class PostRender {
-	   public:
-		bool forEachCb(ActiveEffectInfo* pActiveEffectInfo) {
-			pActiveEffectInfo->pEffect->onPostRender();
-			return true;
-		}
-
-		static bool forEachCbImpl(ActiveEffectInfo* pActiveEffectInfo, void* user) {
-			return reinterpret_cast<PostRender*>(user)->forEachCb(pActiveEffectInfo);
-		}
-	};
-
 	void updateEffectStack() {
-		OnFrame onFrame;
-		activeEffectStack.forEachItem(onFrame);
+		OnFramePredicate frameState;
+		activeEffectStack.forEach(frameState);
+
+		// After iteration, remove all the effects which expired on this update call.
+		for(u32 i = 0; i < frameState.removeList.size(); ++i) {
+			// chaosLogf(LogInfo, "Removing effect \"%s\" since it expired", frameState.removeList[i]->getName());
+			removeFromEffectStack(frameState.removeList[i]);
+		}
 	}
 
 	void preRenderEffectStack() {
-		PreRender preRender;
-		activeEffectStack.forEachItem(preRender);
+		PreRenderPredicate preRender;
+		activeEffectStack.forEach(preRender);
 	}
 
 	void postRenderEffectStack() {
-		PostRender postRender;
-		activeEffectStack.forEachItem(postRender);
+		PostRenderPredicate postRender;
+		activeEffectStack.forEach(postRender);
 	}
+};
+
+namespace {
+
+	ml::PtrSingleton<ChaosCore> gpChaosCore;
 
 } // namespace
 
 ChaosCore& chaosGetCore() {
-	return gChaosCore;
+	return gpChaosCore.get();
+}
+
+ChaosCore::ChaosCore() {
+	mlASSERT(pImpl == nil(ChaosCoreImpl*));
+	pImpl = new ChaosCoreImpl();
+}
+
+ChaosCore::~ChaosCore() {
+	delete pImpl;
+	pImpl = nil(ChaosCoreImpl*);
 }
 
 void ChaosCore::registerEffect(ChaosEffect* effect) {
-	// In release, we just handle this by not actually trying to add the effect id.
-	mlASSERT(!doesEffectIdExist(effect->getId()) && "DUPLICATE EFFECT ID FIX BROKEN CODE");
-	if(doesEffectIdExist(effect->getId()))
-		return;
-
-	RegisteredEffect registerMe;
-	registerMe.id = effect->getId();
-	registerMe.pEffect = effect;
-	registeredEffects.pushBack(registerMe);
+	pImpl->registerEffect(effect);
 }
 
 void ChaosCore::getRandomEffectIds(u32* pEffectIds, u32 count) {
 	ml::Vec<u32> effectIdUsageStack;
 
 	for(u32 i = 0; i < count; ++i) {
-		u32 id = getRandomEffectId();
+		u32 id = pImpl->getRandomEffectId();
 
 #if 0 // FOR LATER (once we have more effects)
 	// Make sure the effect id hasn't been used before by looking in the effect stack.
@@ -295,7 +244,7 @@ void ChaosCore::getRandomEffectIds(u32* pEffectIds, u32 count) {
 			}
 
 			if(found) {
-				id = getRandomEffectId();
+				id = pImpl->getRandomEffectId();
 				// we loop back and try again
 			} else {
 				effectIdUsageStack.pushBack(id);
@@ -309,20 +258,21 @@ void ChaosCore::getRandomEffectIds(u32* pEffectIds, u32 count) {
 }
 
 void ChaosCore::enableEffect(u32 id, u32 tickLength) {
-	if(!doesEffectIdExist(id))
-		return;
-	addToEffectStack(id, tickLength);
+	ChaosEffect* pEffect = pImpl->getEffectById(id);
+	mlASSERT(pEffect);
+	chaosLogf(LogInfo, "Adding effect \"%s\" for %d ticks", pEffect->getName(), tickLength);
+	pImpl->addToEffectStack(pEffect, tickLength);
 }
 
 void ChaosCore::clearEffects() {
 	u32 effectIds[MAX_EFFECTS_ACTIVE];
-	const u32 count = getActiveEffectIds(&effectIds[0]);
+	const u32 count = pImpl->getActiveEffectIds(&effectIds[0]);
 	for(u32 i = 0; i < count; ++i)
-		removeFromEffectStack(effectIds[i]);
+		pImpl->removeFromEffectStack(pImpl->getEffectById(effectIds[i]));
 }
 
 const char* ChaosCore::getEffectName(u32 id) {
-	ChaosEffect* pEffect = getEffectById(id);
+	ChaosEffect* pEffect = pImpl->getEffectById(id);
 	mlASSERT(pEffect);
 	return pEffect->getName();
 }
@@ -331,17 +281,19 @@ const char* ChaosCore::getEffectName(u32 id) {
 
 void ChaosCore::onTick() {
 	chaosVoteMan()->update();
-	// updateEffectStack();
+	pImpl->updateEffectStack();
 }
 
 void ChaosCore::onPreRender() {
-	// preRenderEffectStack();
+	bIsGameRendering = true;
+	// pImpl->preRenderEffectStack();
 }
 
 void ChaosCore::onPostRender() {
-	// postRenderEffectStack();
-
-	render();
+	// pImpl->postRenderEffectStack();
+	// After this any rendering calls are ours, so any hooks to rendering functions
+	// that effects may have placed should ideally just call the original.
+	bIsGameRendering = false;
 }
 
 void ChaosCore::render() {
