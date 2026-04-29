@@ -48,49 +48,8 @@ namespace ml {
 			}
 		}
 
-		u32 usedSlots() const {
+		u32 usedSlotCount() const {
 			return usedSet.popCount();
-		}
-
-		void forEachItem(bool (*callback)(T* pT, void* user), void* user) {
-			// int count = BitSet<N>::getUsedIndexes(T[N]) might be useful to speed this up
-			// or iteration inside of that? might make this a bit painful considering this is
-			// C++98 we're working with...
-
-			for(u32 i = 0; i < NumItems; ++i) {
-				if(usedSet[i]) {
-					if(!callback(&pItems[i], user))
-						break;
-				}
-			}
-		}
-
-		/// Version of forEachItem which can be used for functor classes
-		template <class U>
-		void forEachItem(U& functor) {
-			this->forEachItem(&U::forEachCbImpl, &functor);
-		}
-
-		T* insert(const T& item) {
-			T* freelistItem = allocate();
-			if(freelistItem == nil(T*))
-				return nil(T*);
-
-			*freelistItem = item;
-			return freelistItem;
-		}
-
-		T* lastAllocatedItem() {
-			if(usedSlots() == 0)
-				return nil(T*);
-
-			for(u32 i = NumItems; i > 0; --i) {
-				if(usedSet[i]) {
-					return &pItems[i];
-				}
-			}
-
-			return nil(T*);
 		}
 	};
 
